@@ -84,8 +84,8 @@ public class MeepMoop {
             case STAY:
                 return executeCommand(new StayCommand(command.getDescription(), command.getFrom(), command.getTo()));
             case TRANSPORT:
-                addTransport(command);
-                break;
+                return executeCommand(new TransportCommand(command.getDescription(),
+                        command.getFromLocation(), command.getToLocation()));
             case BOOK:
                 return executeCommand(new BookingCommand(command.getItemNumber(), true));
             case UNBOOK:
@@ -109,11 +109,6 @@ public class MeepMoop {
     private boolean executeCommand(Command command) throws MeepException {
         command.execute(itinerary, ui, storage);
         return !command.isExit();
-    }
-
-    /** Adds transport from validated parsed fields. */
-    private void addTransport(Parser.ParsedCommand command) {
-        addPlan(new Transport(command.getDescription(), command.getFromLocation(), command.getToLocation()));
     }
 
     /** Adds a plan and prints the standard type-specific confirmation. */

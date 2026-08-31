@@ -167,6 +167,17 @@ class CommandTest {
         assertEquals(PlanType.ACCOMMODATION, storage.load().getItinerary().get(1).getType());
     }
 
+    @Test
+    void transportCommand_executeAddsTransportAndSaves() throws IOException {
+        Itinerary itinerary = new Itinerary();
+        Storage storage = storage();
+
+        new TransportCommand("Flight", "Singapore", "Tokyo").execute(itinerary, new Ui(), storage);
+
+        assertEquals(1, itinerary.getCount());
+        assertEquals(PlanType.TRANSPORT, storage.load().getItinerary().get(1).getType());
+    }
+
     /** Returns storage that cannot be affected because these commands do not save. */
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("meepmoop.txt"));
