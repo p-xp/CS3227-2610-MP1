@@ -98,18 +98,23 @@ public class MeepMoop {
                 deletePlan(command.getItemNumber());
                 break;
             case LIST:
-                ui.showList(itinerary);
-                break;
+                return executeCommand(new ListCommand());
             case VIEW:
                 ui.showPlansOn(command.getFrom(), itinerary);
                 break;
             case EXIT:
-                return false;
+                return executeCommand(new ExitCommand());
             }
         } catch (MeepException exception) {
             ui.showError(exception.getMessage());
         }
         return true;
+    }
+
+    /** Executes a command object and reports whether the command loop should continue. */
+    private boolean executeCommand(Command command) throws MeepException {
+        command.execute(itinerary, ui, storage);
+        return !command.isExit();
     }
 
     /** Adds an activity when a non-empty description was supplied. */
