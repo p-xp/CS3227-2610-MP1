@@ -95,8 +95,7 @@ public class MeepMoop {
                 updateBooking(command.getItemNumber(), false);
                 break;
             case DELETE:
-                deletePlan(command.getItemNumber());
-                break;
+                return executeCommand(new DeleteCommand(command.getItemNumber()));
             case LIST:
                 return executeCommand(new ListCommand());
             case VIEW:
@@ -167,19 +166,4 @@ public class MeepMoop {
         }
     }
 
-    /** Removes the requested itinerary item and reports the updated item count. */
-    private void deletePlan(int planNumber) throws MeepException {
-        Plan removedPlan = itinerary.remove(planNumber);
-        if (removedPlan == null) {
-            throw new MeepException("Invalid item number");
-        }
-        try {
-            storage.save(itinerary);
-        } catch (IOException exception) {
-            itinerary.restore(planNumber, removedPlan);
-            ui.showSaveError();
-            return;
-        }
-        ui.showPlanDeleted(removedPlan, itinerary.getCount());
-    }
 }

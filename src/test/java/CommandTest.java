@@ -3,8 +3,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
@@ -63,6 +65,45 @@ class CommandTest {
         assertEquals(2, itinerary.getCount());
         assertEquals("Here are the items in your itinerary on 1 Sep 2026:" + System.lineSeparator()
                 + "[A] [ ] Museum (at: 1 Sep 2026 10am)" + System.lineSeparator()
+                + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void deleteCommand_executeRemovesPlanAndSavesUpdatedItinerary() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Activity("Museum"));
+        Storage storage = storage();
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        try (PrintStream output = new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)) {
+            new DeleteCommand(1).execute(itinerary, new Ui(output), storage);
+        }
+
+        assertEquals(0, itinerary.getCount());
+        assertEquals(0, storage.load().getItinerary().getCount());
+        assertEquals("Noted. I've removed this item:" + System.lineSeparator()
+                + "[A] [ ] Museum" + System.lineSeparator()
+                + "Now you have 0 items in your itinerary." + System.lineSeparator()
+                + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void deleteCommand_whenSaveFails_restoresPlanAtOriginalPosition() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        Activity first = new Activity("Museum");
+        Activity second = new Activity("Park");
+        itinerary.add(first);
+        itinerary.add(second);
+        Path blocker = Files.createFile(temporaryDirectory.resolve("blocker"));
+        Storage failingStorage = new Storage(blocker.resolve("meepmoop.txt"));
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        try (PrintStream output = new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)) {
+            new DeleteCommand(1).execute(itinerary, new Ui(output), failingStorage);
+        }
+
+        assertEquals(2, itinerary.getCount());
+        assertEquals(first, itinerary.get(1));
+        assertEquals(second, itinerary.get(2));
+        assertEquals("Unable to save data." + System.lineSeparator()
                 + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
     }
 
