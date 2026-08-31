@@ -3,7 +3,7 @@ public class Accommodation extends Plan {
     private final String fromDate;
     private final String toDate;
 
-    /** Creates an accommodation using dates exactly as supplied by the user. */
+    /** Creates an accommodation using ISO dates validated by the command parser. */
     public Accommodation(String description, String fromDate, String toDate) {
         super(description);
         this.fromDate = fromDate;

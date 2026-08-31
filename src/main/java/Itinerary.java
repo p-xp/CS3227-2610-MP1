@@ -1,13 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /** Stores an in-memory collection of itinerary plans. */
 public class Itinerary {
     private static final int MAX_PLANS = 100;
     private final List<Plan> plans = new ArrayList<>();
 
-    /** Adds a plan if this itinerary has remaining capacity. */
+    /**
+     * Adds a non-null plan if this itinerary has remaining capacity.
+     *
+     * @throws NullPointerException if {@code plan} is null
+     */
     public boolean add(Plan plan) {
+        Objects.requireNonNull(plan, "plan must not be null");
         if (plans.size() == MAX_PLANS) {
             return false;
         }
