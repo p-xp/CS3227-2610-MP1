@@ -82,8 +82,7 @@ public class MeepMoop {
             case ACTIVITY:
                 return executeCommand(new ActivityCommand(command.getDescription(), command.getDateTime()));
             case STAY:
-                addAccommodation(command);
-                break;
+                return executeCommand(new StayCommand(command.getDescription(), command.getFrom(), command.getTo()));
             case TRANSPORT:
                 addTransport(command);
                 break;
@@ -110,11 +109,6 @@ public class MeepMoop {
     private boolean executeCommand(Command command) throws MeepException {
         command.execute(itinerary, ui, storage);
         return !command.isExit();
-    }
-
-    /** Adds an accommodation from validated parsed fields. */
-    private void addAccommodation(Parser.ParsedCommand command) {
-        addPlan(new Accommodation(command.getDescription(), command.getFrom(), command.getTo()));
     }
 
     /** Adds transport from validated parsed fields. */

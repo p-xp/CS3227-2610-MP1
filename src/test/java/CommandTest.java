@@ -155,6 +155,18 @@ class CommandTest {
         assertEquals(0, itinerary.getCount());
     }
 
+    @Test
+    void stayCommand_executeAddsStayAndSaves() throws IOException {
+        Itinerary itinerary = new Itinerary();
+        Storage storage = storage();
+
+        new StayCommand("Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3))
+                .execute(itinerary, new Ui(), storage);
+
+        assertEquals(1, itinerary.getCount());
+        assertEquals(PlanType.ACCOMMODATION, storage.load().getItinerary().get(1).getType());
+    }
+
     /** Returns storage that cannot be affected because these commands do not save. */
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("meepmoop.txt"));
