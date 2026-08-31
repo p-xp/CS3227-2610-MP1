@@ -2,6 +2,40 @@
 
 This is a greenfield Java project for the MeepMoop chatbot. Given below are instructions on how to use it.
 
+## Running from the terminal
+
+Prerequisite: JDK 25. The Gradle Wrapper included in this repository downloads
+the required Gradle version automatically, so a separate Gradle installation
+is not needed.
+
+From the project root, compile the Java source files and start the chatbot with:
+
+```bash
+./gradlew classes
+./gradlew --quiet run
+```
+
+Gradle writes compiled files under `build/`, keeping generated `.class` files
+separate from the Java source files.
+
+## Running automated tests
+
+Run the JUnit test suite from the project root with:
+
+```bash
+./gradlew test
+```
+
+JUnit test classes follow Gradle conventions and are stored under
+`src/test/java`. The HTML test report is generated at
+`build/reports/tests/test/index.html`.
+
+Enter commands at the prompt, such as `activity Museum`, `list`, or `delete 1`. Enter `exit` to quit. To provide commands non-interactively, pipe them into the program:
+
+```bash
+printf '%s\n' 'activity Museum' 'list' 'exit' | ./gradlew --quiet run
+```
+
 ## Setting up in Intellij
 
 Prerequisites: JDK 25, update Intellij to the most recent version.

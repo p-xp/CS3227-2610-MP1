@@ -13,3 +13,4 @@ Use this project-specific skill when the user asks to run the interactive Java p
 4. Compare output exactly, normalizing only platform line endings and one final trailing newline. Do not ignore prompts, spacing, capitalization, or extra output.
 5. The helper is fail-fast. On failure, stop immediately and report the test case, command, actual output, and expected output. A non-zero exit status is a failure.
 6. After testing, show the complete console transcript, including every console input and output. Do not edit application code or silently alter the plan to make a test pass.
+7. When application changes introduce or modify an error path, require a corresponding UI test that supplies the bad input and checks the exact displayed error. Interleave those negative cases with successful commands when possible, then use a later successful observation such as `list` to verify that the error did not corrupt internal state.

@@ -43,54 +43,58 @@ public class MeepMoop {
 
         String keyword = input.isEmpty() ? "" : input.split("\\s+", 2)[0].toLowerCase();
         String details = input.length() > keyword.length() ? input.substring(keyword.length()).trim() : "";
-        switch (keyword) {
-        case "activity":
-            addActivity(details, itinerary);
-            break;
-        case "stay":
-            addAccommodation(details, itinerary);
-            break;
-        case "transport":
-            addTransport(details, itinerary);
-            break;
-        case "book":
-            updateBooking(details, itinerary, true);
-            break;
-        case "unbook":
-            updateBooking(details, itinerary, false);
-            break;
-        default:
-            System.out.println("Invalid input");
-            break;
+        try {
+            switch (keyword) {
+            case "activity":
+                addActivity(details, itinerary);
+                break;
+            case "stay":
+                addAccommodation(details, itinerary);
+                break;
+            case "transport":
+                addTransport(details, itinerary);
+                break;
+            case "book":
+                updateBooking(details, itinerary, true);
+                break;
+            case "unbook":
+                updateBooking(details, itinerary, false);
+                break;
+            case "delete":
+                deletePlan(details, itinerary);
+                break;
+            default:
+                throw new MeepException("Invalid input");
+            }
+        } catch (MeepException exception) {
+            System.out.println(exception.getMessage());
+            System.out.println(SEPARATOR);
         }
         return true;
     }
 
     /** Adds an activity when a non-empty description was supplied. */
-    private static void addActivity(String description, Itinerary itinerary) {
+    private static void addActivity(String description, Itinerary itinerary) throws MeepException {
         if (description.isEmpty()) {
-            System.out.println("Invalid activity format. Use: activity <description>");
-            return;
+            throw new MeepException("Invalid activity format. Use: activity <description>");
         }
         addPlan(new Activity(description), "activity", itinerary);
     }
 
     /** Adds an accommodation after extracting its name and date range. */
-    private static void addAccommodation(String details, Itinerary itinerary) {
+    private static void addAccommodation(String details, Itinerary itinerary) throws MeepException {
         String[] parts = extractThreeParts(details);
         if (parts == null) {
-            System.out.println("Invalid stay format. Use: stay <name> /from <date> /to <date>");
-            return;
+            throw new MeepException("Invalid stay format. Use: stay <name> /from <date> /to <date>");
         }
         addPlan(new Accommodation(parts[0], parts[1], parts[2]), "accommodation", itinerary);
     }
 
     /** Adds transport after extracting its description, origin, and destination. */
-    private static void addTransport(String details, Itinerary itinerary) {
+    private static void addTransport(String details, Itinerary itinerary) throws MeepException {
         String[] parts = extractThreeParts(details);
         if (parts == null) {
-            System.out.println("Invalid transport format. Use: transport <name> /from <location> /to <location>");
-            return;
+            throw new MeepException("Invalid transport format. Use: transport <name> /from <location> /to <location>");
         }
         addPlan(new Transport(parts[0], parts[1], parts[2]), "transport", itinerary);
     }
@@ -112,9 +116,9 @@ public class MeepMoop {
     private static void addPlan(Plan plan, String planType, Itinerary itinerary) {
         if (!itinerary.add(plan)) {
             System.out.println("Itinerary is full");
+            System.out.println(SEPARATOR);
             return;
         }
-        System.out.println(SEPARATOR);
         System.out.println("Got it. I've added this " + planType + ":");
         System.out.println(plan);
         System.out.println("Now you have " + itinerary.getCount() + " items in your itinerary.");
@@ -123,7 +127,6 @@ public class MeepMoop {
 
     /** Prints every plan in the itinerary using its one-based list number. */
     private static void printList(Itinerary itinerary) {
-        System.out.println(SEPARATOR);
         System.out.println("Here are the items in your itinerary:");
         for (int index = 0; index < itinerary.getCount(); index++) {
             System.out.println((index + 1) + ". " + itinerary.get(index + 1));
@@ -132,24 +135,43 @@ public class MeepMoop {
     }
 
     /** Updates the booked state for the requested plan number. */
-    private static void updateBooking(String details, Itinerary itinerary, boolean shouldBook) {
+    private static void updateBooking(String details, Itinerary itinerary, boolean shouldBook) throws MeepException {
         if (!details.matches("\\d+")) {
-            System.out.println("Invalid item number");
-            return;
+            throw new MeepException("Invalid item number");
         }
         try {
             int planNumber = Integer.parseInt(details);
             Plan plan = itinerary.get(planNumber);
             if (plan == null) {
-                System.out.println("Invalid item number");
+                throw new MeepException("Invalid item number");
             } else if (plan.isBooked() == shouldBook) {
-                System.out.println("Item is already " + (shouldBook ? "booked" : "unbooked"));
+                throw new MeepException("Item is already " + (shouldBook ? "booked" : "unbooked"));
             } else {
                 plan.setBooked(shouldBook);
                 System.out.println((shouldBook ? "Booked: " : "Unbooked: ") + plan);
+                System.out.println(SEPARATOR);
             }
         } catch (NumberFormatException exception) {
-            System.out.println("Invalid item number");
+            throw new MeepException("Invalid item number");
+        }
+    }
+
+    /** Removes the requested itinerary item and reports the updated item count. */
+    private static void deletePlan(String details, Itinerary itinerary) throws MeepException {
+        if (!details.matches("\\d+")) {
+            throw new MeepException("Invalid item number");
+        }
+        try {
+            Plan removedPlan = itinerary.remove(Integer.parseInt(details));
+            if (removedPlan == null) {
+                throw new MeepException("Invalid item number");
+            }
+            System.out.println("Noted. I've removed this item:");
+            System.out.println(removedPlan);
+            System.out.println("Now you have " + itinerary.getCount() + " items in your itinerary.");
+            System.out.println(SEPARATOR);
+        } catch (NumberFormatException exception) {
+            throw new MeepException("Invalid item number");
         }
     }
 }
