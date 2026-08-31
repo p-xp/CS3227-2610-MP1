@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -47,6 +48,22 @@ class CommandTest {
     @Test
     void listCommand_doesNotSignalExit() {
         assertFalse(new ListCommand().isExit());
+    }
+
+    @Test
+    void viewCommand_executeShowsOnlyPlansOnRequestedDate() throws MeepException {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Activity("Museum", LocalDate.of(2026, 9, 1).atTime(10, 0)));
+        itinerary.add(new Activity("Park", LocalDate.of(2026, 9, 2).atTime(10, 0)));
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        try (PrintStream output = new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)) {
+            new ViewCommand(LocalDate.of(2026, 9, 1)).execute(itinerary, new Ui(output), storage());
+        }
+
+        assertEquals(2, itinerary.getCount());
+        assertEquals("Here are the items in your itinerary on 1 Sep 2026:" + System.lineSeparator()
+                + "[A] [ ] Museum (at: 1 Sep 2026 10am)" + System.lineSeparator()
+                + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
     }
 
     /** Returns storage that cannot be affected because these commands do not save. */

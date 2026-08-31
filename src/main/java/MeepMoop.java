@@ -100,8 +100,7 @@ public class MeepMoop {
             case LIST:
                 return executeCommand(new ListCommand());
             case VIEW:
-                ui.showPlansOn(command.getFrom(), itinerary);
-                break;
+                return executeCommand(new ViewCommand(command.getFrom()));
             case EXIT:
                 return executeCommand(new ExitCommand());
             }
