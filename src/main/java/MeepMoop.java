@@ -1,17 +1,12 @@
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Scanner;
 
 /**
  * The main entry point for the MeepMoop travel itinerary chatbot.
  */
 public class MeepMoop {
-    private static final String SEPARATOR = "____________________________________________________________";
     private static final Path DATA_FILE = Path.of("data", "meepmoop.txt");
-    private static final DateTimeFormatter DISPLAY_DATE =
-            DateTimeFormatter.ofPattern("d MMM uuuu", Locale.ENGLISH);
 
     /**
      * Starts the chatbot and processes itinerary commands until the user exits.
@@ -19,13 +14,13 @@ public class MeepMoop {
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
+        Ui ui = new Ui();
         Storage storage = new Storage(DATA_FILE);
         Storage.LoadResult loadResult;
         try {
             loadResult = storage.load();
         } catch (IOException exception) {
-            System.out.println("Unable to load saved data.");
-            System.out.println(SEPARATOR);
+            ui.showLoadingError();
             return;
         }
 
@@ -34,120 +29,98 @@ public class MeepMoop {
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;
 
-        System.out.println("Hello! I'm MeepMoop. How can I assist you today?");
-        System.out.println(SEPARATOR);
+        ui.showWelcome();
         if (loadResult.hasCorruptedRecords()) {
-            System.out.println("Warning: Some saved data could not be loaded.");
-            System.out.println(SEPARATOR);
+            ui.showCorruptedDataWarning();
         }
 
         while (isRunning && scanner.hasNextLine()) {
-            isRunning = handleCommand(scanner.nextLine(), itinerary, parser, storage);
+            isRunning = handleCommand(scanner.nextLine(), itinerary, parser, storage, ui);
         }
 
-        System.out.println("Goodbye! Have a great day!");
-        System.out.println(SEPARATOR);
+        ui.showGoodbye();
     }
 
     /** Interprets and performs one command entered by the user. */
     static boolean handleCommand(String input, Itinerary itinerary, Parser parser, Storage storage) {
+        return handleCommand(input, itinerary, parser, storage, new Ui());
+    }
+
+    /** Interprets and performs one command using the supplied user interface. */
+    static boolean handleCommand(String input, Itinerary itinerary, Parser parser, Storage storage, Ui ui) {
         try {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
             case ACTIVITY:
-                addActivity(command.getDescription(), command.getDateTime(), itinerary, storage);
+                addActivity(command.getDescription(), command.getDateTime(), itinerary, storage, ui);
                 break;
             case STAY:
-                addAccommodation(command, itinerary, storage);
+                addAccommodation(command, itinerary, storage, ui);
                 break;
             case TRANSPORT:
-                addTransport(command, itinerary, storage);
+                addTransport(command, itinerary, storage, ui);
                 break;
             case BOOK:
-                updateBooking(command.getItemNumber(), itinerary, true, storage);
+                updateBooking(command.getItemNumber(), itinerary, true, storage, ui);
                 break;
             case UNBOOK:
-                updateBooking(command.getItemNumber(), itinerary, false, storage);
+                updateBooking(command.getItemNumber(), itinerary, false, storage, ui);
                 break;
             case DELETE:
-                deletePlan(command.getItemNumber(), itinerary, storage);
+                deletePlan(command.getItemNumber(), itinerary, storage, ui);
                 break;
             case LIST:
-                printList(itinerary);
+                ui.showList(itinerary);
                 break;
             case VIEW:
-                printView(command.getFrom(), itinerary);
+                ui.showPlansOn(command.getFrom(), itinerary);
                 break;
             case EXIT:
                 return false;
             }
         } catch (MeepException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(SEPARATOR);
+            ui.showError(exception.getMessage());
         }
         return true;
     }
 
     /** Adds an activity when a non-empty description was supplied. */
     private static void addActivity(String description, java.time.LocalDateTime scheduledAt,
-                                    Itinerary itinerary, Storage storage) {
-        addPlan(new Activity(description, scheduledAt), itinerary, storage);
+                                    Itinerary itinerary, Storage storage, Ui ui) {
+        addPlan(new Activity(description, scheduledAt), itinerary, storage, ui);
     }
 
     /** Adds an accommodation from validated parsed fields. */
-    private static void addAccommodation(Parser.ParsedCommand command, Itinerary itinerary, Storage storage) {
+    private static void addAccommodation(Parser.ParsedCommand command, Itinerary itinerary, Storage storage, Ui ui) {
         addPlan(new Accommodation(command.getDescription(), command.getFrom(), command.getTo()),
-                itinerary, storage);
+                itinerary, storage, ui);
     }
 
     /** Adds transport from validated parsed fields. */
-    private static void addTransport(Parser.ParsedCommand command, Itinerary itinerary, Storage storage) {
+    private static void addTransport(Parser.ParsedCommand command, Itinerary itinerary, Storage storage, Ui ui) {
         addPlan(new Transport(command.getDescription(), command.getFromLocation(), command.getToLocation()),
-                itinerary, storage);
+                itinerary, storage, ui);
     }
 
     /** Adds a plan and prints the standard type-specific confirmation. */
-    private static void addPlan(Plan plan, Itinerary itinerary, Storage storage) {
+    private static void addPlan(Plan plan, Itinerary itinerary, Storage storage, Ui ui) {
         if (!itinerary.add(plan)) {
-            System.out.println("Itinerary is full");
-            System.out.println(SEPARATOR);
+            ui.showItineraryFull();
             return;
         }
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
             itinerary.remove(itinerary.getCount());
-            printSaveError();
+            ui.showSaveError();
             return;
         }
-        System.out.println("Got it. I've added this " + plan.getType().getDisplayName() + ":");
-        System.out.println(plan);
-        System.out.println("Now you have " + itinerary.getCount() + " items in your itinerary.");
-        System.out.println(SEPARATOR);
-    }
-
-    /** Prints every plan in the itinerary using its one-based list number. */
-    private static void printList(Itinerary itinerary) {
-        System.out.println("Here are the items in your itinerary:");
-        for (int index = 0; index < itinerary.getCount(); index++) {
-            System.out.println((index + 1) + ". " + itinerary.get(index + 1));
-        }
-        System.out.println(SEPARATOR);
-    }
-
-    /** Prints plans which occur on a requested date; any supplied view time is ignored. */
-    private static void printView(java.time.LocalDate date, Itinerary itinerary) {
-        System.out.println("Here are the items in your itinerary on "
-                + date.format(DISPLAY_DATE) + ":");
-        for (Plan plan : itinerary.getPlansOn(date)) {
-            System.out.println(plan);
-        }
-        System.out.println(SEPARATOR);
+        ui.showPlanAdded(plan, itinerary.getCount());
     }
 
     /** Updates the booked state for the requested plan number. */
     private static void updateBooking(int planNumber, Itinerary itinerary, boolean shouldBook,
-                                      Storage storage) throws MeepException {
+                                      Storage storage, Ui ui) throws MeepException {
         Plan plan = itinerary.get(planNumber);
         if (plan == null) {
             throw new MeepException("Invalid item number");
@@ -159,16 +132,15 @@ public class MeepMoop {
                 storage.save(itinerary);
             } catch (IOException exception) {
                 plan.setBooked(!shouldBook);
-                printSaveError();
+                ui.showSaveError();
                 return;
             }
-            System.out.println((shouldBook ? "Booked: " : "Unbooked: ") + plan);
-            System.out.println(SEPARATOR);
+            ui.showBookingUpdated(plan, shouldBook);
         }
     }
 
     /** Removes the requested itinerary item and reports the updated item count. */
-    private static void deletePlan(int planNumber, Itinerary itinerary, Storage storage) throws MeepException {
+    private static void deletePlan(int planNumber, Itinerary itinerary, Storage storage, Ui ui) throws MeepException {
         Plan removedPlan = itinerary.remove(planNumber);
         if (removedPlan == null) {
             throw new MeepException("Invalid item number");
@@ -177,18 +149,9 @@ public class MeepMoop {
             storage.save(itinerary);
         } catch (IOException exception) {
             itinerary.restore(planNumber, removedPlan);
-            printSaveError();
+            ui.showSaveError();
             return;
         }
-        System.out.println("Noted. I've removed this item:");
-        System.out.println(removedPlan);
-        System.out.println("Now you have " + itinerary.getCount() + " items in your itinerary.");
-        System.out.println(SEPARATOR);
-    }
-
-    /** Prints the standard error used when a state change cannot be persisted. */
-    private static void printSaveError() {
-        System.out.println("Unable to save data.");
-        System.out.println(SEPARATOR);
+        ui.showPlanDeleted(removedPlan, itinerary.getCount());
     }
 }
