@@ -9,6 +9,9 @@ class AccommodationTest {
         Accommodation accommodation = new Accommodation(
                 "Hotel", "2026-09-01", "2026-09-03");
 
+        assertEquals(PlanType.ACCOMMODATION, accommodation.getType());
+        assertEquals("2026-09-01", accommodation.getFromDate());
+        assertEquals("2026-09-03", accommodation.getToDate());
         assertEquals("[S] [ ] Hotel (from: 2026-09-01 to: 2026-09-03)",
                 accommodation.toString());
     }

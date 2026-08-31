@@ -5,15 +5,25 @@ public class Transport extends Plan {
 
     /** Creates a transport plan with its origin and destination. */
     public Transport(String description, String fromLocation, String toLocation) {
-        super(description);
+        super(PlanType.TRANSPORT, description);
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
+    }
+
+    /** Returns the transport's origin. */
+    public String getFromLocation() {
+        return fromLocation;
+    }
+
+    /** Returns the transport's destination. */
+    public String getToLocation() {
+        return toLocation;
     }
 
     /** Returns the transport arrangement in list-display format. */
     @Override
     public String toString() {
-        return getDisplayPrefix("T") + getDescription()
+        return getDisplayPrefix() + getDescription()
                 + " (from: " + fromLocation + " to: " + toLocation + ")";
     }
 }

@@ -8,6 +8,7 @@ class ActivityTest {
     void toString_unbookedActivity_returnsUnbookedDisplayFormat() {
         Activity activity = new Activity("Museum visit");
 
+        assertEquals(PlanType.ACTIVITY, activity.getType());
         assertEquals("[A] [ ] Museum visit", activity.toString());
     }
 

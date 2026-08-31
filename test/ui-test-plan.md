@@ -91,6 +91,25 @@ paired with its exact expected output.
 - Expected output: Every invalid number shows the standard error and the final
   list still contains the original unbooked activity.
 
+### 11. Start without a data file or folder
+
+- Aim: Confirm a first-time launch starts normally without pre-created storage.
+- Inputs: List the empty itinerary, then exit.
+- Expected output: The chatbot starts without a warning and lists no items.
+
+### 12. Persist data across restarts
+
+- Aim: Confirm successful changes are automatically restored by a new process.
+- Inputs: Add and book an item, exit, restart, list the itinerary, then exit.
+- Expected output: The restarted chatbot lists the saved item as booked.
+
+### 13. Recover valid data from a corrupted file
+
+- Aim: Confirm valid records load while malformed records are skipped.
+- Inputs: Start from a file containing one valid record and one malformed record,
+  list the itinerary, then exit.
+- Expected output: One startup warning appears and the valid item remains available.
+
 <!-- test-ui:begin -->
 [
   {
@@ -327,6 +346,39 @@ paired with its exact expected output.
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Park' 'book' 'book 0' 'unbook -1' 'delete 999999999999999999999' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
         "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Park\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid item number\n____________________________________________________________\nInvalid item number\n____________________________________________________________\nInvalid item number\n____________________________________________________________\nInvalid item number\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Park\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "Start without a data file or folder",
+    "aim": "Start normally when neither the relative data file nor its folder exists.",
+    "inputs": ["list", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nHere are the items in your itinerary:\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "Persist data across restarts",
+    "aim": "Save changes immediately and restore them in a second chatbot process.",
+    "inputs": ["activity Museum", "book 1", "exit", "restart", "list", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Museum' 'book 1' 'exit' | java -cp build/classes/java/main MeepMoop && printf '%s\\n' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Museum\nNow you have 1 items in your itinerary.\n____________________________________________________________\nBooked: [A] [X] Museum\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________\nHello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [X] Museum\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "Recover valid data from a corrupted file",
+    "aim": "Warn once, skip a malformed record, and retain a valid encoded record.",
+    "inputs": ["list", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && mkdir -p data && printf '%s\\n' 'A | 1 | UmVjb3ZlcmVk' 'bad record' > data/meepmoop.txt && printf '%s\\n' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nWarning: Some saved data could not be loaded.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [X] Recovered\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   }

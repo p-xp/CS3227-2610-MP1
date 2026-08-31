@@ -8,6 +8,9 @@ class TransportTest {
     void toString_unbookedTransport_returnsLocationsAndUnbookedMarker() {
         Transport transport = new Transport("Flight", "Singapore", "Tokyo");
 
+        assertEquals(PlanType.TRANSPORT, transport.getType());
+        assertEquals("Singapore", transport.getFromLocation());
+        assertEquals("Tokyo", transport.getToLocation());
         assertEquals("[T] [ ] Flight (from: Singapore to: Tokyo)", transport.toString());
     }
 

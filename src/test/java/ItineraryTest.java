@@ -120,6 +120,50 @@ class ItineraryTest {
         assertSame(activity, itinerary.get(1));
     }
 
+    @Test
+    void restore_middlePosition_reinsertsPlanAndPreservesOrder() {
+        Itinerary itinerary = new Itinerary();
+        Activity first = new Activity("First");
+        Activity second = new Activity("Second");
+        Activity third = new Activity("Third");
+        itinerary.add(first);
+        itinerary.add(third);
+
+        itinerary.restore(2, second);
+
+        assertEquals(3, itinerary.getCount());
+        assertSame(first, itinerary.get(1));
+        assertSame(second, itinerary.get(2));
+        assertSame(third, itinerary.get(3));
+    }
+
+    @Test
+    void restore_nullPlan_throwsExceptionAndPreservesState() {
+        Itinerary itinerary = new Itinerary();
+
+        NullPointerException exception = assertThrows(
+                NullPointerException.class, () -> itinerary.restore(1, null));
+
+        assertEquals("plan must not be null", exception.getMessage());
+        assertEquals(0, itinerary.getCount());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0, 3, Integer.MAX_VALUE})
+    void restore_invalidPosition_throwsExceptionAndPreservesState(int planNumber) {
+        Itinerary itinerary = new Itinerary();
+        Activity existing = new Activity("Existing");
+        itinerary.add(existing);
+
+        IndexOutOfBoundsException exception = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> itinerary.restore(planNumber, new Activity("Restored")));
+
+        assertEquals("invalid restore position", exception.getMessage());
+        assertEquals(1, itinerary.getCount());
+        assertSame(existing, itinerary.get(1));
+    }
+
     /** Creates an itinerary containing the requested number of valid plans. */
     private static Itinerary itineraryWithPlans(int count) {
         Itinerary itinerary = new Itinerary();

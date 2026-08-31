@@ -41,4 +41,17 @@ public class Itinerary {
         }
         return plans.remove(planNumber - 1);
     }
+
+    /**
+     * Restores a plan at a valid one-based position after a failed persistent update.
+     * This operation is package-private because normal user operations should use
+     * {@link #add(Plan)} or {@link #remove(int)}.
+     */
+    void restore(int planNumber, Plan plan) {
+        Objects.requireNonNull(plan, "plan must not be null");
+        if (planNumber < 1 || planNumber > plans.size() + 1) {
+            throw new IndexOutOfBoundsException("invalid restore position");
+        }
+        plans.add(planNumber - 1, plan);
+    }
 }

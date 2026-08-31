@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Fail-fast runner for the JSON test plan embedded in test/ui-test-plan.md."""
+import atexit
 import json
 import subprocess
 import sys
@@ -29,10 +30,35 @@ def main() -> int:
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(f"TEST SESSION FAILED: {error}")
         return 1
+
+    data_file = Path("data/meepmoop.txt")
+    data_file_existed = data_file.is_file()
+    original_data = data_file.read_bytes() if data_file_existed else None
+    data_folder_existed = data_file.parent.exists()
+
+    def restore_original_data():
+        """Restores personal data after the isolated UI test session."""
+        if data_file_existed:
+            data_file.parent.mkdir(parents=True, exist_ok=True)
+            data_file.write_bytes(original_data)
+        else:
+            data_file.unlink(missing_ok=True)
+            if not data_folder_existed:
+                try:
+                    data_file.parent.rmdir()
+                except OSError:
+                    pass
+
+    atexit.register(restore_original_data)
     print("=== TEST SESSION ===")
     for case_number, case in enumerate(cases, 1):
         name = case.get("name", f"case {case_number}")
         print(f"\n--- {name} ---")
+        data_file.unlink(missing_ok=True)
+        try:
+            data_file.parent.rmdir()
+        except OSError:
+            pass
         for command_number, command in enumerate(case.get("commands", []), 1):
             if not isinstance(command, dict) or "command" not in command or "expected" not in command:
                 print(f"TEST SESSION FAILED: malformed command in {name}")

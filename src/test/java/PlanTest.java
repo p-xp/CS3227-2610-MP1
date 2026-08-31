@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-/** Tests the shared description, booking state, and display behavior of plans. */
+/** Tests the shared type, description, booking state, and display behavior of plans. */
 class PlanTest {
     @Test
-    void constructor_newPlan_storesDescriptionAndStartsUnbooked() {
+    void constructor_newPlan_storesTypeAndDescriptionAndStartsUnbooked() {
         TestPlan plan = new TestPlan("Museum");
 
+        assertEquals(PlanType.ACTIVITY, plan.getType());
         assertEquals("Museum", plan.getDescription());
         assertFalse(plan.isBooked());
     }
@@ -29,20 +30,20 @@ class PlanTest {
     void getDisplayPrefix_differentBookingStates_returnsCorrectMarkers() {
         TestPlan plan = new TestPlan("Museum");
 
-        assertEquals("[P] [ ] ", plan.displayPrefix("P"));
+        assertEquals("[A] [ ] ", plan.displayPrefix());
 
         plan.setBooked(true);
-        assertEquals("[P] [X] ", plan.displayPrefix("P"));
+        assertEquals("[A] [X] ", plan.displayPrefix());
     }
 
     /** Minimal concrete plan used to expose protected behavior for testing. */
     private static final class TestPlan extends Plan {
         private TestPlan(String description) {
-            super(description);
+            super(PlanType.ACTIVITY, description);
         }
 
-        private String displayPrefix(String typeMarker) {
-            return getDisplayPrefix(typeMarker);
+        private String displayPrefix() {
+            return getDisplayPrefix();
         }
 
         @Override
