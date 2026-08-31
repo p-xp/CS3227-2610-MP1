@@ -71,7 +71,7 @@ class MeepMoopTest {
         try (PrintStream capturedOutput = new PrintStream(
                 capturedBytes, true, StandardCharsets.UTF_8)) {
             System.setOut(capturedOutput);
-            MeepMoop.handleCommand(input, itinerary, new Parser(), storage);
+            new MeepMoop(itinerary, new Parser(), storage, new Ui(capturedOutput)).handleCommand(input);
         } finally {
             System.setOut(originalOutput);
         }

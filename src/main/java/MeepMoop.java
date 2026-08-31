@@ -7,6 +7,43 @@ import java.util.Scanner;
  */
 public class MeepMoop {
     private static final Path DATA_FILE = Path.of("data", "meepmoop.txt");
+    private final Storage storage;
+    private final Itinerary itinerary;
+    private final Parser parser;
+    private final Ui ui;
+    private final boolean hasCorruptedRecords;
+
+    /**
+     * Creates the application and loads the itinerary stored at the supplied path.
+     * If the saved data cannot be read, the application reports the problem and
+     * does not start its command loop.
+     */
+    public MeepMoop(Path dataFile) {
+        this.storage = new Storage(dataFile);
+        this.parser = new Parser();
+        this.ui = new Ui();
+
+        Itinerary loadedItinerary = null;
+        boolean loadedCorruptedRecords = false;
+        try {
+            Storage.LoadResult loadResult = storage.load();
+            loadedItinerary = loadResult.getItinerary();
+            loadedCorruptedRecords = loadResult.hasCorruptedRecords();
+        } catch (IOException exception) {
+            ui.showLoadingError();
+        }
+        this.itinerary = loadedItinerary;
+        this.hasCorruptedRecords = loadedCorruptedRecords;
+    }
+
+    /** Creates an application with supplied collaborators for command-level tests. */
+    MeepMoop(Itinerary itinerary, Parser parser, Storage storage, Ui ui) {
+        this.itinerary = itinerary;
+        this.parser = parser;
+        this.storage = storage;
+        this.ui = ui;
+        this.hasCorruptedRecords = false;
+    }
 
     /**
      * Starts the chatbot and processes itinerary commands until the user exits.
@@ -14,60 +51,51 @@ public class MeepMoop {
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
-        Ui ui = new Ui();
-        Storage storage = new Storage(DATA_FILE);
-        Storage.LoadResult loadResult;
-        try {
-            loadResult = storage.load();
-        } catch (IOException exception) {
-            ui.showLoadingError();
+        new MeepMoop(DATA_FILE).run();
+    }
+
+    /** Starts the user interface and processes commands until the user exits. */
+    public void run() {
+        if (itinerary == null) {
             return;
         }
 
-        Itinerary itinerary = loadResult.getItinerary();
-        Parser parser = new Parser();
-        Scanner scanner = new Scanner(System.in);
-        boolean isRunning = true;
-
         ui.showWelcome();
-        if (loadResult.hasCorruptedRecords()) {
+        if (hasCorruptedRecords) {
             ui.showCorruptedDataWarning();
         }
 
+        Scanner scanner = new Scanner(System.in);
+        boolean isRunning = true;
         while (isRunning && scanner.hasNextLine()) {
-            isRunning = handleCommand(scanner.nextLine(), itinerary, parser, storage, ui);
+            isRunning = handleCommand(scanner.nextLine());
         }
 
         ui.showGoodbye();
     }
 
     /** Interprets and performs one command entered by the user. */
-    static boolean handleCommand(String input, Itinerary itinerary, Parser parser, Storage storage) {
-        return handleCommand(input, itinerary, parser, storage, new Ui());
-    }
-
-    /** Interprets and performs one command using the supplied user interface. */
-    static boolean handleCommand(String input, Itinerary itinerary, Parser parser, Storage storage, Ui ui) {
+    boolean handleCommand(String input) {
         try {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
             case ACTIVITY:
-                addActivity(command.getDescription(), command.getDateTime(), itinerary, storage, ui);
+                addActivity(command.getDescription(), command.getDateTime());
                 break;
             case STAY:
-                addAccommodation(command, itinerary, storage, ui);
+                addAccommodation(command);
                 break;
             case TRANSPORT:
-                addTransport(command, itinerary, storage, ui);
+                addTransport(command);
                 break;
             case BOOK:
-                updateBooking(command.getItemNumber(), itinerary, true, storage, ui);
+                updateBooking(command.getItemNumber(), true);
                 break;
             case UNBOOK:
-                updateBooking(command.getItemNumber(), itinerary, false, storage, ui);
+                updateBooking(command.getItemNumber(), false);
                 break;
             case DELETE:
-                deletePlan(command.getItemNumber(), itinerary, storage, ui);
+                deletePlan(command.getItemNumber());
                 break;
             case LIST:
                 ui.showList(itinerary);
@@ -85,25 +113,22 @@ public class MeepMoop {
     }
 
     /** Adds an activity when a non-empty description was supplied. */
-    private static void addActivity(String description, java.time.LocalDateTime scheduledAt,
-                                    Itinerary itinerary, Storage storage, Ui ui) {
-        addPlan(new Activity(description, scheduledAt), itinerary, storage, ui);
+    private void addActivity(String description, java.time.LocalDateTime scheduledAt) {
+        addPlan(new Activity(description, scheduledAt));
     }
 
     /** Adds an accommodation from validated parsed fields. */
-    private static void addAccommodation(Parser.ParsedCommand command, Itinerary itinerary, Storage storage, Ui ui) {
-        addPlan(new Accommodation(command.getDescription(), command.getFrom(), command.getTo()),
-                itinerary, storage, ui);
+    private void addAccommodation(Parser.ParsedCommand command) {
+        addPlan(new Accommodation(command.getDescription(), command.getFrom(), command.getTo()));
     }
 
     /** Adds transport from validated parsed fields. */
-    private static void addTransport(Parser.ParsedCommand command, Itinerary itinerary, Storage storage, Ui ui) {
-        addPlan(new Transport(command.getDescription(), command.getFromLocation(), command.getToLocation()),
-                itinerary, storage, ui);
+    private void addTransport(Parser.ParsedCommand command) {
+        addPlan(new Transport(command.getDescription(), command.getFromLocation(), command.getToLocation()));
     }
 
     /** Adds a plan and prints the standard type-specific confirmation. */
-    private static void addPlan(Plan plan, Itinerary itinerary, Storage storage, Ui ui) {
+    private void addPlan(Plan plan) {
         if (!itinerary.add(plan)) {
             ui.showItineraryFull();
             return;
@@ -119,8 +144,7 @@ public class MeepMoop {
     }
 
     /** Updates the booked state for the requested plan number. */
-    private static void updateBooking(int planNumber, Itinerary itinerary, boolean shouldBook,
-                                      Storage storage, Ui ui) throws MeepException {
+    private void updateBooking(int planNumber, boolean shouldBook) throws MeepException {
         Plan plan = itinerary.get(planNumber);
         if (plan == null) {
             throw new MeepException("Invalid item number");
@@ -140,7 +164,7 @@ public class MeepMoop {
     }
 
     /** Removes the requested itinerary item and reports the updated item count. */
-    private static void deletePlan(int planNumber, Itinerary itinerary, Storage storage, Ui ui) throws MeepException {
+    private void deletePlan(int planNumber) throws MeepException {
         Plan removedPlan = itinerary.remove(planNumber);
         if (removedPlan == null) {
             throw new MeepException("Invalid item number");
