@@ -133,6 +133,28 @@ class CommandTest {
         assertFalse(activity.isBooked());
     }
 
+    @Test
+    void activityCommand_executeAddsActivityAndSaves() throws IOException {
+        Itinerary itinerary = new Itinerary();
+        Storage storage = storage();
+
+        new ActivityCommand("Museum", null).execute(itinerary, new Ui(), storage);
+
+        assertEquals(1, itinerary.getCount());
+        assertEquals("Museum", storage.load().getItinerary().get(1).getDescription());
+    }
+
+    @Test
+    void activityCommand_whenSaveFails_removesAddedActivity() throws IOException {
+        Itinerary itinerary = new Itinerary();
+        Path blocker = Files.createFile(temporaryDirectory.resolve("activity-blocker"));
+        Storage failingStorage = new Storage(blocker.resolve("meepmoop.txt"));
+
+        new ActivityCommand("Museum", null).execute(itinerary, new Ui(), failingStorage);
+
+        assertEquals(0, itinerary.getCount());
+    }
+
     /** Returns storage that cannot be affected because these commands do not save. */
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("meepmoop.txt"));

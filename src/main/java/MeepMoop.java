@@ -80,8 +80,7 @@ public class MeepMoop {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
             case ACTIVITY:
-                addActivity(command.getDescription(), command.getDateTime());
-                break;
+                return executeCommand(new ActivityCommand(command.getDescription(), command.getDateTime()));
             case STAY:
                 addAccommodation(command);
                 break;
@@ -111,11 +110,6 @@ public class MeepMoop {
     private boolean executeCommand(Command command) throws MeepException {
         command.execute(itinerary, ui, storage);
         return !command.isExit();
-    }
-
-    /** Adds an activity when a non-empty description was supplied. */
-    private void addActivity(String description, java.time.LocalDateTime scheduledAt) {
-        addPlan(new Activity(description, scheduledAt));
     }
 
     /** Adds an accommodation from validated parsed fields. */
