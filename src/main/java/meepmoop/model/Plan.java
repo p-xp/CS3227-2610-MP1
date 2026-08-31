@@ -30,8 +30,8 @@ public abstract class Plan {
     }
 
     /** Updates whether this plan has been booked. */
-    public void setBooked(boolean booked) {
-        this.booked = booked;
+    public void setBooked(boolean isBooked) {
+        this.booked = isBooked;
     }
 
     /** Builds common type and booking markers for plan displays. */

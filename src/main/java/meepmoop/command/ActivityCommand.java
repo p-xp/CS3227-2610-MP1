@@ -1,13 +1,13 @@
 package meepmoop.command;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
 import meepmoop.model.Activity;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
 
 /** Adds an activity to the itinerary and saves the updated itinerary. */
 public final class ActivityCommand extends Command {

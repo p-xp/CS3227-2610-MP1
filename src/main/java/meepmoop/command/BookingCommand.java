@@ -1,12 +1,12 @@
 package meepmoop.command;
 
+import java.io.IOException;
+
 import meepmoop.exception.MeepException;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
 
 /** Changes one plan's booking state and saves the updated itinerary. */
 public final class BookingCommand extends Command {

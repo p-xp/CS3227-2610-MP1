@@ -1,11 +1,5 @@
 package meepmoop.storage;
 
-import meepmoop.model.Accommodation;
-import meepmoop.model.Activity;
-import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
-import meepmoop.model.Transport;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,6 +17,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import meepmoop.model.Accommodation;
+import meepmoop.model.Activity;
+import meepmoop.model.Itinerary;
+import meepmoop.model.Plan;
+import meepmoop.model.Transport;
 
 /** Tests file creation, round trips, validation, capacity, and I/O failures. */
 class StorageTest {

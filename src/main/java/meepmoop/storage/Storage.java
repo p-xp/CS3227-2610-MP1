@@ -1,11 +1,5 @@
 package meepmoop.storage;
 
-import meepmoop.model.Accommodation;
-import meepmoop.model.Activity;
-import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
-import meepmoop.model.Transport;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -22,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+
+import meepmoop.model.Accommodation;
+import meepmoop.model.Activity;
+import meepmoop.model.Itinerary;
+import meepmoop.model.Plan;
+import meepmoop.model.Transport;
 
 /** Loads and saves itinerary plans in a line-oriented UTF-8 data file. */
 public class Storage {

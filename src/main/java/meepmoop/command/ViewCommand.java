@@ -1,11 +1,11 @@
 package meepmoop.command;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 import meepmoop.model.Itinerary;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.time.LocalDate;
-import java.util.Objects;
 
 /** Displays plans that occur on one requested date. */
 public final class ViewCommand extends Command {

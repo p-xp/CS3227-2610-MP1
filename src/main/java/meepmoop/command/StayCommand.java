@@ -1,13 +1,13 @@
 package meepmoop.command;
 
+import java.io.IOException;
+import java.time.LocalDate;
+
 import meepmoop.model.Accommodation;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
-import java.time.LocalDate;
 
 /** Adds an accommodation stay to the itinerary and saves the updated itinerary. */
 public final class StayCommand extends Command {

@@ -1,11 +1,5 @@
 package meepmoop;
 
-import meepmoop.model.Activity;
-import meepmoop.model.Itinerary;
-import meepmoop.parser.Parser;
-import meepmoop.storage.Storage;
-import meepmoop.ui.Ui;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -19,6 +13,12 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import meepmoop.model.Activity;
+import meepmoop.model.Itinerary;
+import meepmoop.parser.Parser;
+import meepmoop.storage.Storage;
+import meepmoop.ui.Ui;
 
 /** Tests command-level rollback when persistence fails. */
 class MeepMoopTest {

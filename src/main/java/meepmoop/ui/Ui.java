@@ -1,13 +1,13 @@
 package meepmoop.ui;
 
-import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
-
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
+
+import meepmoop.model.Itinerary;
+import meepmoop.model.Plan;
 
 /** Handles all text displayed to the user by the MeepMoop command-line interface. */
 public final class Ui {

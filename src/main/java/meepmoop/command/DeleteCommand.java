@@ -1,12 +1,12 @@
 package meepmoop.command;
 
+import java.io.IOException;
+
 import meepmoop.exception.MeepException;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
 
 /** Removes one plan from the itinerary and saves the updated itinerary. */
 public final class DeleteCommand extends Command {

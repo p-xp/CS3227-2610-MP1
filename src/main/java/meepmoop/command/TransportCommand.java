@@ -1,12 +1,12 @@
 package meepmoop.command;
 
+import java.io.IOException;
+
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.model.Transport;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
 
 /** Adds transport to the itinerary and saves the updated itinerary. */
 public final class TransportCommand extends Command {

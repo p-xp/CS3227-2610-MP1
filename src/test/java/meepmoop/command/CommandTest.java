@@ -1,14 +1,5 @@
 package meepmoop.command;
 
-import meepmoop.exception.MeepException;
-import meepmoop.model.Accommodation;
-import meepmoop.model.Activity;
-import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
-import meepmoop.model.PlanType;
-import meepmoop.storage.Storage;
-import meepmoop.ui.Ui;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +14,15 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import meepmoop.exception.MeepException;
+import meepmoop.model.Accommodation;
+import meepmoop.model.Activity;
+import meepmoop.model.Itinerary;
+import meepmoop.model.Plan;
+import meepmoop.model.PlanType;
+import meepmoop.storage.Storage;
+import meepmoop.ui.Ui;
 
 /** Tests the initial command classes extracted from the command loop. */
 class CommandTest {

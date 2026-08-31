@@ -1,7 +1,5 @@
 package meepmoop.parser;
 
-import meepmoop.exception.MeepException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +8,8 @@ import java.time.format.ResolverStyle;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import meepmoop.exception.MeepException;
 
 /** Parses and validates one command-line input without performing the command. */
 public final class Parser {

@@ -1,5 +1,9 @@
 package meepmoop;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Scanner;
+
 import meepmoop.command.ActivityCommand;
 import meepmoop.command.BookingCommand;
 import meepmoop.command.Command;
@@ -15,10 +19,6 @@ import meepmoop.model.Plan;
 import meepmoop.parser.Parser;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Scanner;
 
 /**
  * The main entry point for the MeepMoop travel itinerary chatbot.
