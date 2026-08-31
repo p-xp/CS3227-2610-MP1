@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -162,6 +165,20 @@ class ItineraryTest {
         assertEquals("invalid restore position", exception.getMessage());
         assertEquals(1, itinerary.getCount());
         assertSame(existing, itinerary.get(1));
+    }
+
+    @Test
+    void getPlansOn_includesDatedActivitiesAndInclusiveStays() {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Dinner", LocalDateTime.of(2026, 9, 2, 18, 0));
+        Accommodation stay = new Accommodation("Hotel", LocalDate.of(2026, 9, 1),
+                LocalDate.of(2026, 9, 3));
+        itinerary.add(activity);
+        itinerary.add(stay);
+
+        assertEquals(2, itinerary.getPlansOn(LocalDate.of(2026, 9, 2)).size());
+        assertEquals(1, itinerary.getPlansOn(LocalDate.of(2026, 9, 3)).size());
+        assertEquals(0, itinerary.getPlansOn(LocalDate.of(2026, 9, 4)).size());
     }
 
     /** Creates an itinerary containing the requested number of valid plans. */

@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 /** Tests the console display representation of an accommodation. */
@@ -7,22 +9,22 @@ class AccommodationTest {
     @Test
     void toString_unbookedAccommodation_returnsDatesAndUnbookedMarker() {
         Accommodation accommodation = new Accommodation(
-                "Hotel", "2026-09-01", "2026-09-03");
+                "Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3));
 
         assertEquals(PlanType.ACCOMMODATION, accommodation.getType());
-        assertEquals("2026-09-01", accommodation.getFromDate());
-        assertEquals("2026-09-03", accommodation.getToDate());
-        assertEquals("[S] [ ] Hotel (from: 2026-09-01 to: 2026-09-03)",
+        assertEquals(LocalDate.of(2026, 9, 1), accommodation.getFromDate());
+        assertEquals(LocalDate.of(2026, 9, 3), accommodation.getToDate());
+        assertEquals("[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)",
                 accommodation.toString());
     }
 
     @Test
     void toString_bookedAccommodation_returnsDatesAndBookedMarker() {
         Accommodation accommodation = new Accommodation(
-                "Hotel", "2026-09-01", "2026-09-03");
+                "Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3));
         accommodation.setBooked(true);
 
-        assertEquals("[S] [X] Hotel (from: 2026-09-01 to: 2026-09-03)",
+        assertEquals("[S] [X] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)",
                 accommodation.toString());
     }
 }

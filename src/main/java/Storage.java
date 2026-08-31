@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -96,13 +97,18 @@ public class Storage {
     private static String formatPlan(Plan plan) {
         String booked = plan.isBooked() ? "1" : "0";
         return switch (plan.getType()) {
-        case ACTIVITY -> String.join(FIELD_SEPARATOR,
-                "A", booked, encode(plan.getDescription()));
+        case ACTIVITY -> {
+            Activity activity = (Activity) plan;
+            yield activity.getScheduledAt() == null
+                    ? String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()))
+                    : String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()),
+                    encode(activity.getScheduledAt().toString()));
+        }
         case ACCOMMODATION -> {
             Accommodation accommodation = (Accommodation) plan;
             yield String.join(FIELD_SEPARATOR, "S", booked,
-                    encode(plan.getDescription()), encode(accommodation.getFromDate()),
-                    encode(accommodation.getToDate()));
+                    encode(plan.getDescription()), encode(accommodation.getFromDate().toString()),
+                    encode(accommodation.getToDate().toString()));
         }
         case TRANSPORT -> {
             Transport transport = (Transport) plan;
@@ -130,10 +136,13 @@ public class Storage {
         return plan;
     }
 
-    /** Parses an activity record with exactly one text field. */
+    /** Parses a legacy undated activity or an activity with a scheduled date and time. */
     private static Activity parseActivity(String[] fields) {
-        requireFieldCount(fields, 3);
-        return new Activity(decodeNonempty(fields[2]));
+        if (fields.length == 3) {
+            return new Activity(decodeNonempty(fields[2]));
+        }
+        requireFieldCount(fields, 4);
+        return new Activity(decodeNonempty(fields[2]), LocalDateTime.parse(decodeNonempty(fields[3])));
     }
 
     /** Parses an accommodation record and validates its chronological ISO dates. */
@@ -151,7 +160,7 @@ public class Storage {
         } catch (DateTimeParseException exception) {
             throw new IllegalArgumentException("invalid accommodation date", exception);
         }
-        return new Accommodation(description, fromDate, toDate);
+        return new Accommodation(description, LocalDate.parse(fromDate), LocalDate.parse(toDate));
     }
 
     /** Parses a transport record with an origin and destination. */

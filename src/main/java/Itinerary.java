@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +41,17 @@ public class Itinerary {
             return null;
         }
         return plans.remove(planNumber - 1);
+    }
+
+    /** Returns all plans whose date information includes the supplied date, in list order. */
+    public List<Plan> getPlansOn(LocalDate date) {
+        List<Plan> matchingPlans = new ArrayList<>();
+        for (Plan plan : plans) {
+            if (plan.occursOn(date)) {
+                matchingPlans.add(plan);
+            }
+        }
+        return matchingPlans;
     }
 
     /**

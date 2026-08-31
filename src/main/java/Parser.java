@@ -1,5 +1,8 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +11,9 @@ import java.util.regex.Pattern;
 public final class Parser {
     private static final String INVALID_INPUT = "Invalid input";
     private static final String INVALID_ACTIVITY_FORMAT =
-            "Invalid activity format. Use: activity <description>";
+            "Invalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]";
+    private static final String INVALID_ACTIVITY_DATE =
+            "Invalid activity date. Use: YYYY-MM-DD HHmm";
     private static final String INVALID_STAY_FORMAT =
             "Invalid stay format. Use: stay <name> /from <date> /to <date>";
     private static final String INVALID_STAY_DATES =
@@ -16,6 +21,9 @@ public final class Parser {
     private static final String INVALID_TRANSPORT_FORMAT =
             "Invalid transport format. Use: transport <name> /from <location> /to <location>";
     private static final String INVALID_ITEM_NUMBER = "Invalid item number";
+    private static final String INVALID_VIEW_DATE = "Invalid view date. Use: view YYYY-MM-DD";
+    private static final DateTimeFormatter DATE_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT);
     private static final Pattern MARKER_PATTERN = Pattern.compile(
             "(?<!\\S)/(from|to)(?!\\S)", Pattern.CASE_INSENSITIVE);
 
@@ -28,6 +36,7 @@ public final class Parser {
         UNBOOK,
         DELETE,
         LIST,
+        VIEW,
         EXIT
     }
 
@@ -40,16 +49,28 @@ public final class Parser {
     public static final class ParsedCommand {
         private final CommandType type;
         private final String description;
-        private final String from;
-        private final String to;
+        private final LocalDate from;
+        private final LocalDate to;
+        private final LocalDateTime dateTime;
+        private final String fromLocation;
+        private final String toLocation;
         private final int itemNumber;
 
-        private ParsedCommand(CommandType type, String description, String from,
-                              String to, int itemNumber) {
+        private ParsedCommand(CommandType type, String description, LocalDate from,
+                              LocalDate to, LocalDateTime dateTime, int itemNumber) {
+            this(type, description, from, to, dateTime, null, null, itemNumber);
+        }
+
+        private ParsedCommand(CommandType type, String description, LocalDate from,
+                              LocalDate to, LocalDateTime dateTime, String fromLocation,
+                              String toLocation, int itemNumber) {
             this.type = type;
             this.description = description;
             this.from = from;
             this.to = to;
+            this.dateTime = dateTime;
+            this.fromLocation = fromLocation;
+            this.toLocation = toLocation;
             this.itemNumber = itemNumber;
         }
 
@@ -63,19 +84,34 @@ public final class Parser {
             return description;
         }
 
-        /** Returns the start date or origin when applicable. */
-        public String getFrom() {
+        /** Returns the start date, or the requested view date, when applicable. */
+        public LocalDate getFrom() {
             return from;
         }
 
-        /** Returns the end date or destination when applicable. */
-        public String getTo() {
+        /** Returns the end date when applicable. */
+        public LocalDate getTo() {
             return to;
         }
 
         /** Returns the positive one-based item number when applicable. */
         public int getItemNumber() {
             return itemNumber;
+        }
+
+        /** Returns an activity's date and time when applicable. */
+        public LocalDateTime getDateTime() {
+            return dateTime;
+        }
+
+        /** Returns a transport command's origin. */
+        public String getFromLocation() {
+            return fromLocation;
+        }
+
+        /** Returns a transport command's destination. */
+        public String getToLocation() {
+            return toLocation;
         }
     }
 
@@ -102,6 +138,7 @@ public final class Parser {
         case "unbook" -> parseItemCommand(CommandType.UNBOOK, details);
         case "delete" -> parseItemCommand(CommandType.DELETE, details);
         case "list" -> parseArgumentlessCommand(CommandType.LIST, details);
+        case "view" -> parseView(details);
         case "exit" -> parseArgumentlessCommand(CommandType.EXIT, details);
         default -> throw new MeepException(INVALID_INPUT);
         };
@@ -112,20 +149,35 @@ public final class Parser {
         if (details.isEmpty()) {
             throw new MeepException(INVALID_ACTIVITY_FORMAT);
         }
-        return new ParsedCommand(CommandType.ACTIVITY, details, null, null, 0);
+        int marker = details.toLowerCase(Locale.ROOT).lastIndexOf(" /at ");
+        if (marker < 0) {
+            return new ParsedCommand(CommandType.ACTIVITY, details, null, null, null, 0);
+        }
+        String description = details.substring(0, marker).trim();
+        String dateTimeText = details.substring(marker + 5).trim();
+        if (description.isEmpty() || dateTimeText.toLowerCase(Locale.ROOT).contains(" /at ")) {
+            throw new MeepException(INVALID_ACTIVITY_FORMAT);
+        }
+        try {
+            return new ParsedCommand(CommandType.ACTIVITY, description, null, null,
+                    LocalDateTime.parse(dateTimeText, DATE_TIME_FORMAT), 0);
+        } catch (DateTimeParseException exception) {
+            throw new MeepException(INVALID_ACTIVITY_DATE);
+        }
     }
 
     /** Validates stay syntax and chronological ISO dates. */
     private static ParsedCommand parseStay(String details) throws MeepException {
         String[] parts = parseThreeParts(details, INVALID_STAY_FORMAT);
-        validateStayDates(parts[1], parts[2]);
-        return new ParsedCommand(CommandType.STAY, parts[0], parts[1], parts[2], 0);
+        LocalDate[] dates = validateStayDates(parts[1], parts[2]);
+        return new ParsedCommand(CommandType.STAY, parts[0], dates[0], dates[1], null, 0);
     }
 
     /** Validates transport syntax and extracts its route fields. */
     private static ParsedCommand parseTransport(String details) throws MeepException {
         String[] parts = parseThreeParts(details, INVALID_TRANSPORT_FORMAT);
-        return new ParsedCommand(CommandType.TRANSPORT, parts[0], parts[1], parts[2], 0);
+        return new ParsedCommand(CommandType.TRANSPORT, parts[0], null, null, null,
+                parts[1], parts[2], 0);
     }
 
     /** Extracts three nonempty fields around exactly one /from and one /to marker. */
@@ -157,13 +209,14 @@ public final class Parser {
     }
 
     /** Requires real ISO dates whose start is not after their end. */
-    private static void validateStayDates(String fromText, String toText) throws MeepException {
+    private static LocalDate[] validateStayDates(String fromText, String toText) throws MeepException {
         try {
             LocalDate fromDate = LocalDate.parse(fromText);
             LocalDate toDate = LocalDate.parse(toText);
             if (fromDate.isAfter(toDate)) {
                 throw new MeepException(INVALID_STAY_DATES);
             }
+            return new LocalDate[] {fromDate, toDate};
         } catch (DateTimeParseException exception) {
             throw new MeepException(INVALID_STAY_DATES);
         }
@@ -179,7 +232,7 @@ public final class Parser {
             if (itemNumber < 1) {
                 throw new MeepException(INVALID_ITEM_NUMBER);
             }
-            return new ParsedCommand(type, null, null, null, itemNumber);
+            return new ParsedCommand(type, null, null, null, null, itemNumber);
         } catch (NumberFormatException exception) {
             throw new MeepException(INVALID_ITEM_NUMBER);
         }
@@ -190,6 +243,20 @@ public final class Parser {
         if (!details.isEmpty()) {
             throw new MeepException(INVALID_INPUT);
         }
-        return new ParsedCommand(type, null, null, null, 0);
+        return new ParsedCommand(type, null, null, null, null, 0);
+    }
+
+    /** Parses a date-only view command, accepting and ignoring one supplied time token. */
+    private static ParsedCommand parseView(String details) throws MeepException {
+        String[] fields = details.split("\\s+");
+        if (details.isEmpty() || fields.length > 2) {
+            throw new MeepException(INVALID_VIEW_DATE);
+        }
+        try {
+            LocalDate date = LocalDate.parse(fields[0]);
+            return new ParsedCommand(CommandType.VIEW, null, date, null, null, 0);
+        } catch (DateTimeParseException exception) {
+            throw new MeepException(INVALID_VIEW_DATE);
+        }
     }
 }

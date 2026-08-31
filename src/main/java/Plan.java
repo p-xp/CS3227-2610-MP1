@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /** Represents a bookable item in a travel itinerary. */
 public abstract class Plan {
     private final PlanType type;
@@ -33,6 +35,11 @@ public abstract class Plan {
     /** Builds common type and booking markers for plan displays. */
     protected String getDisplayPrefix() {
         return "[" + type.getMarker() + "] [" + (booked ? "X" : " ") + "] ";
+    }
+
+    /** Returns whether this plan occurs on the supplied calendar date. */
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     /** Returns this plan in the format shown in the itinerary list. */

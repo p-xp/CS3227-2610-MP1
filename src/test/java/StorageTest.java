@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -47,9 +49,9 @@ class StorageTest {
         Path dataFile = temporaryDirectory.resolve("data.txt");
         Storage storage = new Storage(dataFile);
         Itinerary itinerary = new Itinerary();
-        Activity activity = new Activity("Café | 夜景 \\ tour");
+        Activity activity = new Activity("Café | 夜景 \\ tour", LocalDateTime.of(2026, 9, 2, 18, 0));
         Accommodation accommodation = new Accommodation(
-                "海辺 Hotel", "2026-09-01", "2026-09-03");
+                "海辺 Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3));
         Transport transport = new Transport("Flight ✈", "Singapore", "São Paulo");
         accommodation.setBooked(true);
         itinerary.add(activity);
@@ -61,8 +63,8 @@ class StorageTest {
 
         assertFalse(result.hasCorruptedRecords());
         assertEquals(3, result.getItinerary().getCount());
-        assertEquals("[A] [ ] Café | 夜景 \\ tour", result.getItinerary().get(1).toString());
-        assertEquals("[S] [X] 海辺 Hotel (from: 2026-09-01 to: 2026-09-03)",
+        assertEquals("[A] [ ] Café | 夜景 \\ tour (at: 2 Sep 2026 6pm)", result.getItinerary().get(1).toString());
+        assertEquals("[S] [X] 海辺 Hotel (from: 1 Sep 2026 to: 3 Sep 2026)",
                 result.getItinerary().get(2).toString());
         assertEquals("[T] [ ] Flight ✈ (from: Singapore to: São Paulo)",
                 result.getItinerary().get(3).toString());

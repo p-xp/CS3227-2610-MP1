@@ -3,6 +3,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -32,8 +35,8 @@ class ParserTest {
         assertAll(
                 () -> assertEquals(Parser.CommandType.STAY, command.getType()),
                 () -> assertEquals("Beach Hotel", command.getDescription()),
-                () -> assertEquals("2028-02-29", command.getFrom()),
-                () -> assertEquals("2028-03-02", command.getTo()));
+                () -> assertEquals(LocalDate.of(2028, 2, 29), command.getFrom()),
+                () -> assertEquals(LocalDate.of(2028, 3, 2), command.getTo()));
     }
 
     @Test
@@ -42,8 +45,8 @@ class ParserTest {
                 "stay Hotel /from 2026-09-01 /to 2026-09-01");
 
         assertEquals(Parser.CommandType.STAY, command.getType());
-        assertEquals("2026-09-01", command.getFrom());
-        assertEquals("2026-09-01", command.getTo());
+        assertEquals(LocalDate.of(2026, 9, 1), command.getFrom());
+        assertEquals(LocalDate.of(2026, 9, 1), command.getTo());
     }
 
     @Test
@@ -54,8 +57,26 @@ class ParserTest {
         assertAll(
                 () -> assertEquals(Parser.CommandType.TRANSPORT, command.getType()),
                 () -> assertEquals("Airport Shuttle", command.getDescription()),
-                () -> assertEquals("Changi Airport", command.getFrom()),
-                () -> assertEquals("City Hall", command.getTo()));
+                () -> assertEquals("Changi Airport", command.getFromLocation()),
+                () -> assertEquals("City Hall", command.getToLocation()));
+    }
+
+    @Test
+    void parse_datedActivityAndView_returnsJavaTimeValues() throws MeepException {
+        Parser.ParsedCommand activity = parser.parse("activity Dinner /at 2026-09-01 1800");
+        Parser.ParsedCommand view = parser.parse("view 2026-09-01 2359");
+
+        assertEquals(LocalDateTime.of(2026, 9, 1, 18, 0), activity.getDateTime());
+        assertEquals(LocalDate.of(2026, 9, 1), view.getFrom());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"activity Dinner /at 2026-02-30 1800", "activity Dinner /at 2026-09-01 2460",
+        "view", "view 2026-02-30", "view 2026-09-01 1200 extra"})
+    void parse_invalidDateCommands_throwsSpecificError(String input) {
+        assertParseError(input, input.startsWith("view")
+                ? "Invalid view date. Use: view YYYY-MM-DD"
+                : "Invalid activity date. Use: YYYY-MM-DD HHmm");
     }
 
     @ParameterizedTest
@@ -94,7 +115,7 @@ class ParserTest {
     @ParameterizedTest
     @ValueSource(strings = {"activity", "activity   "})
     void parse_activityWithoutDescription_throwsActivityFormatError(String input) {
-        assertParseError(input, "Invalid activity format. Use: activity <description>");
+        assertParseError(input, "Invalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]");
     }
 
     @ParameterizedTest

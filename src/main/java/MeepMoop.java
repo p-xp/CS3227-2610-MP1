@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -8,6 +10,8 @@ import java.util.Scanner;
 public class MeepMoop {
     private static final String SEPARATOR = "____________________________________________________________";
     private static final Path DATA_FILE = Path.of("data", "meepmoop.txt");
+    private static final DateTimeFormatter DISPLAY_DATE =
+            DateTimeFormatter.ofPattern("d MMM uuuu", Locale.ENGLISH);
 
     /**
      * Starts the chatbot and processes itinerary commands until the user exits.
@@ -51,7 +55,7 @@ public class MeepMoop {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
             case ACTIVITY:
-                addActivity(command.getDescription(), itinerary, storage);
+                addActivity(command.getDescription(), command.getDateTime(), itinerary, storage);
                 break;
             case STAY:
                 addAccommodation(command, itinerary, storage);
@@ -71,6 +75,9 @@ public class MeepMoop {
             case LIST:
                 printList(itinerary);
                 break;
+            case VIEW:
+                printView(command.getFrom(), itinerary);
+                break;
             case EXIT:
                 return false;
             }
@@ -82,8 +89,9 @@ public class MeepMoop {
     }
 
     /** Adds an activity when a non-empty description was supplied. */
-    private static void addActivity(String description, Itinerary itinerary, Storage storage) {
-        addPlan(new Activity(description), itinerary, storage);
+    private static void addActivity(String description, java.time.LocalDateTime scheduledAt,
+                                    Itinerary itinerary, Storage storage) {
+        addPlan(new Activity(description, scheduledAt), itinerary, storage);
     }
 
     /** Adds an accommodation from validated parsed fields. */
@@ -94,7 +102,7 @@ public class MeepMoop {
 
     /** Adds transport from validated parsed fields. */
     private static void addTransport(Parser.ParsedCommand command, Itinerary itinerary, Storage storage) {
-        addPlan(new Transport(command.getDescription(), command.getFrom(), command.getTo()),
+        addPlan(new Transport(command.getDescription(), command.getFromLocation(), command.getToLocation()),
                 itinerary, storage);
     }
 
@@ -123,6 +131,16 @@ public class MeepMoop {
         System.out.println("Here are the items in your itinerary:");
         for (int index = 0; index < itinerary.getCount(); index++) {
             System.out.println((index + 1) + ". " + itinerary.get(index + 1));
+        }
+        System.out.println(SEPARATOR);
+    }
+
+    /** Prints plans which occur on a requested date; any supplied view time is ignored. */
+    private static void printView(java.time.LocalDate date, Itinerary itinerary) {
+        System.out.println("Here are the items in your itinerary on "
+                + date.format(DISPLAY_DATE) + ":");
+        for (Plan plan : itinerary.getPlansOn(date)) {
+            System.out.println(plan);
         }
         System.out.println(SEPARATOR);
     }

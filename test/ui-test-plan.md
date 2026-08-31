@@ -110,6 +110,16 @@ paired with its exact expected output.
   list the itinerary, then exit.
 - Expected output: One startup warning appears and the valid item remains available.
 
+### 14. View items occurring on a date
+
+- Aim: Confirm that `view` includes a dated activity and a stay spanning the
+  requested date, ignores a supplied time, and rejects malformed dates without
+  changing the itinerary.
+- Inputs: Add a dated activity and a three-day stay, view their shared date
+  with a time, submit an invalid date, then view the following stay-only date.
+- Expected output: The first view contains both matching items, the invalid
+  input shows the date error, and the final view contains only the stay.
+
 <!-- test-ui:begin -->
 [
   {
@@ -119,7 +129,7 @@ paired with its exact expected output.
     "commands": [
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Museum' 'stay Hotel /from 2026-09-01 /to 2026-09-03' 'transport Flight /from Singapore /to Tokyo' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
-        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Museum\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Hotel (from: 2026-09-01 to: 2026-09-03)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this transport:\n[T] [ ] Flight (from: Singapore to: Tokyo)\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Museum\n2. [S] [ ] Hotel (from: 2026-09-01 to: 2026-09-03)\n3. [T] [ ] Flight (from: Singapore to: Tokyo)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Museum\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this transport:\n[T] [ ] Flight (from: Singapore to: Tokyo)\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Museum\n2. [S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n3. [T] [ ] Flight (from: Singapore to: Tokyo)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   },
@@ -141,7 +151,7 @@ paired with its exact expected output.
     "commands": [
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Park' 'stay bad' 'transport bad' 'activity' 'wat' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
-        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Park\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nInvalid activity format. Use: activity <description>\n____________________________________________________________\nInvalid input\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Park\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Park\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nInvalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]\n____________________________________________________________\nInvalid input\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Park\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   },
@@ -306,7 +316,7 @@ paired with its exact expected output.
     "commands": [
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' '  AcTiViTy   Night Safari  ' 'STAY Beach Hotel /FROM 2026-09-01 /TO 2026-09-03' 'TRANSPORT Airport Shuttle /FrOm Changi Airport /tO City Hall' 'LiSt' 'EXIT' | java -cp build/classes/java/main MeepMoop",
-        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Night Safari\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Beach Hotel (from: 2026-09-01 to: 2026-09-03)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this transport:\n[T] [ ] Airport Shuttle (from: Changi Airport to: City Hall)\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Night Safari\n2. [S] [ ] Beach Hotel (from: 2026-09-01 to: 2026-09-03)\n3. [T] [ ] Airport Shuttle (from: Changi Airport to: City Hall)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Night Safari\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Beach Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this transport:\n[T] [ ] Airport Shuttle (from: Changi Airport to: City Hall)\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [ ] Night Safari\n2. [S] [ ] Beach Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n3. [T] [ ] Airport Shuttle (from: Changi Airport to: City Hall)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   },
@@ -379,6 +389,17 @@ paired with its exact expected output.
       {
         "command": "./gradlew --quiet classes && mkdir -p data && printf '%s\\n' 'A | 1 | UmVjb3ZlcmVk' 'bad record' > data/meepmoop.txt && printf '%s\\n' 'list' 'exit' | java -cp build/classes/java/main MeepMoop",
         "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nWarning: Some saved data could not be loaded.\n____________________________________________________________\nHere are the items in your itinerary:\n1. [A] [X] Recovered\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "View items occurring on a date",
+    "aim": "Include dated activities and inclusive stay ranges, ignore a supplied view time, and reject bad dates.",
+    "inputs": ["activity Dinner /at 2026-09-02 1800", "stay Hotel /from 2026-09-01 /to 2026-09-03", "view 2026-09-02 2359", "view 2026-02-30", "view 2026-09-03", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Dinner /at 2026-09-02 1800' 'stay Hotel /from 2026-09-01 /to 2026-09-03' 'view 2026-09-02 2359' 'view 2026-02-30' 'view 2026-09-03' 'exit' | java -cp build/classes/java/main MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Dinner (at: 2 Sep 2026 6pm)\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary on 2 Sep 2026:\n[A] [ ] Dinner (at: 2 Sep 2026 6pm)\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n____________________________________________________________\nInvalid view date. Use: view YYYY-MM-DD\n____________________________________________________________\nHere are the items in your itinerary on 3 Sep 2026:\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   }
