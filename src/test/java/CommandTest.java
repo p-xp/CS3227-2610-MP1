@@ -107,6 +107,32 @@ class CommandTest {
                 + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
     }
 
+    @Test
+    void bookingCommand_executeUpdatesBookingStateAndSaves() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        itinerary.add(activity);
+        Storage storage = storage();
+
+        new BookingCommand(1, true).execute(itinerary, new Ui(), storage);
+
+        assertTrue(activity.isBooked());
+        assertTrue(storage.load().getItinerary().get(1).isBooked());
+    }
+
+    @Test
+    void bookingCommand_whenSaveFails_restoresPreviousBookingState() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        itinerary.add(activity);
+        Path blocker = Files.createFile(temporaryDirectory.resolve("booking-blocker"));
+        Storage failingStorage = new Storage(blocker.resolve("meepmoop.txt"));
+
+        new BookingCommand(1, true).execute(itinerary, new Ui(), failingStorage);
+
+        assertFalse(activity.isBooked());
+    }
+
     /** Returns storage that cannot be affected because these commands do not save. */
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("meepmoop.txt"));

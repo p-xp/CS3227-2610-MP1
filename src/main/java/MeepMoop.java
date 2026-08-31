@@ -89,11 +89,9 @@ public class MeepMoop {
                 addTransport(command);
                 break;
             case BOOK:
-                updateBooking(command.getItemNumber(), true);
-                break;
+                return executeCommand(new BookingCommand(command.getItemNumber(), true));
             case UNBOOK:
-                updateBooking(command.getItemNumber(), false);
-                break;
+                return executeCommand(new BookingCommand(command.getItemNumber(), false));
             case DELETE:
                 return executeCommand(new DeleteCommand(command.getItemNumber()));
             case LIST:
@@ -144,26 +142,6 @@ public class MeepMoop {
             return;
         }
         ui.showPlanAdded(plan, itinerary.getCount());
-    }
-
-    /** Updates the booked state for the requested plan number. */
-    private void updateBooking(int planNumber, boolean shouldBook) throws MeepException {
-        Plan plan = itinerary.get(planNumber);
-        if (plan == null) {
-            throw new MeepException("Invalid item number");
-        } else if (plan.isBooked() == shouldBook) {
-            throw new MeepException("Item is already " + (shouldBook ? "booked" : "unbooked"));
-        } else {
-            plan.setBooked(shouldBook);
-            try {
-                storage.save(itinerary);
-            } catch (IOException exception) {
-                plan.setBooked(!shouldBook);
-                ui.showSaveError();
-                return;
-            }
-            ui.showBookingUpdated(plan, shouldBook);
-        }
     }
 
 }
