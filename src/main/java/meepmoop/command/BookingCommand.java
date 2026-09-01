@@ -33,10 +33,16 @@ public final class BookingCommand extends Command {
             throw new MeepException("Item is already " + (shouldBook ? "booked" : "unbooked"));
         }
         plan.setBooked(shouldBook);
+        assert plan.isBooked() == shouldBook
+                : "a booking command must set the plan to its requested booking state";
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
+            assert plan.isBooked() == shouldBook
+                    : "a plan must retain its requested state until a failed save is rolled back";
             plan.setBooked(!shouldBook);
+            assert plan.isBooked() != shouldBook
+                    : "a failed save must restore the plan's prior booking state";
             ui.showSaveError();
             return;
         }

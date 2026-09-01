@@ -29,10 +29,15 @@ public final class TransportCommand extends Command {
             ui.showItineraryFull();
             return;
         }
+        int addedPlanNumber = itinerary.getCount();
+        assert itinerary.get(addedPlanNumber) == plan
+                : "newly added transport must be the last plan before saving";
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
-            itinerary.remove(itinerary.getCount());
+            Plan removedPlan = itinerary.remove(addedPlanNumber);
+            assert removedPlan == plan
+                    : "a failed transport save must remove the transport that was just added";
             ui.showSaveError();
             return;
         }

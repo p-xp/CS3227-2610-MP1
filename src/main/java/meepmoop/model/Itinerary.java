@@ -22,6 +22,8 @@ public class Itinerary {
             return false;
         }
         plans.add(plan);
+        assert plans.get(plans.size() - 1) == plan
+                : "a successfully added plan must become the final itinerary item";
         return true;
     }
 
@@ -82,5 +84,7 @@ public class Itinerary {
             throw new IndexOutOfBoundsException("invalid restore position");
         }
         plans.add(planNumber - 1, plan);
+        assert plans.get(planNumber - 1) == plan
+                : "a restored plan must return to its original itinerary position";
     }
 }

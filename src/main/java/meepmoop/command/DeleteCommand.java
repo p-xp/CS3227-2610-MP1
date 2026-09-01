@@ -24,14 +24,19 @@ public final class DeleteCommand extends Command {
      */
     @Override
     public void execute(Itinerary itinerary, Ui ui, Storage storage) throws MeepException {
+        int originalPlanCount = itinerary.getCount();
         Plan removedPlan = itinerary.remove(planNumber);
         if (removedPlan == null) {
             throw new MeepException("Invalid item number");
         }
+        assert itinerary.getCount() == originalPlanCount - 1
+                : "removing one plan must reduce the itinerary count by one";
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
             itinerary.restore(planNumber, removedPlan);
+            assert itinerary.getCount() == originalPlanCount && itinerary.get(planNumber) == removedPlan
+                    : "a failed deletion save must restore the plan and its original position";
             ui.showSaveError();
             return;
         }

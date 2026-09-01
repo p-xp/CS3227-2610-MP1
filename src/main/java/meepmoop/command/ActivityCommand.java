@@ -28,10 +28,15 @@ public final class ActivityCommand extends Command {
             ui.showItineraryFull();
             return;
         }
+        int addedPlanNumber = itinerary.getCount();
+        assert itinerary.get(addedPlanNumber) == plan
+                : "a newly added activity must be the last plan before saving";
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
-            itinerary.remove(itinerary.getCount());
+            Plan removedPlan = itinerary.remove(addedPlanNumber);
+            assert removedPlan == plan
+                    : "a failed activity save must remove the activity that was just added";
             ui.showSaveError();
             return;
         }

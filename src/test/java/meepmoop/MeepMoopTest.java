@@ -39,6 +39,28 @@ class MeepMoopTest {
     }
 
     @Test
+    void handleCommand_stayCannotBeSaved_rollsBackAddition() throws IOException {
+        Itinerary itinerary = new Itinerary();
+
+        String output = runCommand("stay Hotel /from 2026-09-01 /to 2026-09-03",
+                itinerary, failingStorage());
+
+        assertEquals(0, itinerary.getCount());
+        assertEquals(SAVE_ERROR, output);
+    }
+
+    @Test
+    void handleCommand_transportCannotBeSaved_rollsBackAddition() throws IOException {
+        Itinerary itinerary = new Itinerary();
+
+        String output = runCommand("transport Train /from Singapore /to Kuala Lumpur",
+                itinerary, failingStorage());
+
+        assertEquals(0, itinerary.getCount());
+        assertEquals(SAVE_ERROR, output);
+    }
+
+    @Test
     void handleCommand_bookingCannotBeSaved_restoresUnbookedState() throws IOException {
         Itinerary itinerary = new Itinerary();
         Activity activity = new Activity("Museum");

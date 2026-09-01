@@ -30,10 +30,15 @@ public final class StayCommand extends Command {
             ui.showItineraryFull();
             return;
         }
+        int addedPlanNumber = itinerary.getCount();
+        assert itinerary.get(addedPlanNumber) == plan
+                : "a newly added stay must be the last plan before saving";
         try {
             storage.save(itinerary);
         } catch (IOException exception) {
-            itinerary.remove(itinerary.getCount());
+            Plan removedPlan = itinerary.remove(addedPlanNumber);
+            assert removedPlan == plan
+                    : "a failed stay save must remove the stay that was just added";
             ui.showSaveError();
             return;
         }
