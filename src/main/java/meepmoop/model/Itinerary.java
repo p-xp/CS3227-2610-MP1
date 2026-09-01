@@ -3,6 +3,7 @@ package meepmoop.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /** Stores an in-memory collection of itinerary plans. */
@@ -54,6 +55,18 @@ public class Itinerary {
             }
         }
         return matchingPlans;
+    }
+
+    /** Returns one-based numbers of plans whose descriptions contain every supplied keyword. */
+    public List<Integer> getPlanNumbersMatchingKeywords(List<String> keywords) {
+        List<Integer> matchingPlanNumbers = new ArrayList<>();
+        for (int index = 0; index < plans.size(); index++) {
+            String description = plans.get(index).getDescription().toLowerCase(Locale.ROOT);
+            if (keywords.stream().allMatch(keyword -> description.contains(keyword.toLowerCase(Locale.ROOT)))) {
+                matchingPlanNumbers.add(index + 1);
+            }
+        }
+        return matchingPlanNumbers;
     }
 
     /**

@@ -32,6 +32,8 @@ class UiTest {
             ui.showBookingUpdated(activity, true);
             ui.showList(itinerary);
             ui.showPlansOn(LocalDate.of(2026, 9, 1), itinerary);
+            ui.showPlansMatchingKeywords("museum", itinerary);
+            ui.showPlansMatchingKeywords("hotel", itinerary);
             ui.showPlanDeleted(activity, 0);
             ui.showItineraryFull();
             ui.showLoadingError();
@@ -56,6 +58,11 @@ class UiTest {
                 + SEPARATOR + newline
                 + "Here are the items in your itinerary on 1 Sep 2026:" + newline
                 + "[A] [X] Museum (at: 1 Sep 2026 9am)" + newline
+                + SEPARATOR + newline
+                + "Here are the matching items in your itinerary:" + newline
+                + "1. [A] [X] Museum (at: 1 Sep 2026 9am)" + newline
+                + SEPARATOR + newline
+                + "No match found for keyword \"hotel\"." + newline
                 + SEPARATOR + newline
                 + "Noted. I've removed this item:" + newline
                 + "[A] [X] Museum (at: 1 Sep 2026 9am)" + newline

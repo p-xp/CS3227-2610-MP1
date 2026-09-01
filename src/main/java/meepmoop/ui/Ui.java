@@ -3,6 +3,7 @@ package meepmoop.ui;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -105,6 +106,21 @@ public final class Ui {
                 + date.format(DISPLAY_DATE) + ":");
         for (Plan plan : itinerary.getPlansOn(date)) {
             output.println(plan);
+        }
+        showSeparator();
+    }
+
+    /** Shows plans whose descriptions match every supplied find keyword. */
+    public void showPlansMatchingKeywords(String keywords, Itinerary itinerary) {
+        List<Integer> matchingPlanNumbers = itinerary.getPlanNumbersMatchingKeywords(
+                List.of(keywords.split("\\s+")));
+        if (matchingPlanNumbers.isEmpty()) {
+            output.println("No match found for keyword \"" + keywords + "\".");
+        } else {
+            output.println("Here are the matching items in your itinerary:");
+            for (int planNumber : matchingPlanNumbers) {
+                output.println(planNumber + ". " + itinerary.get(planNumber));
+            }
         }
         showSeparator();
     }

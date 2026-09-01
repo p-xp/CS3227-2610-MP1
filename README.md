@@ -31,7 +31,7 @@ JUnit test classes follow Gradle conventions and are stored under
 `build/reports/tests/test/index.html`.
 
 Enter commands at the prompt, such as `activity Museum /at 2026-09-01 1800`,
-`stay Hotel /from 2026-09-01 /to 2026-09-03`, `view 2026-09-01`, `list`, or
+`stay Hotel /from 2026-09-01 /to 2026-09-03`, `view 2026-09-01`, `find book`, `list`, or
 `delete 1`. Activity date-times use `YYYY-MM-DD HHmm`; displays use a readable
 12-hour format. `view` accepts a date and ignores an optional supplied time.
 Enter `exit` to quit. To provide commands non-interactively, pipe them into the program:

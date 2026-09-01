@@ -62,6 +62,17 @@ transport Airport Shuttle /from Changi Airport /to City Hall
 Use `list` without arguments. Items are displayed in insertion order using
 one-based item numbers.
 
+## Finding itinerary items
+
+Use `find <keyword> [<keyword>...]` to find items by their descriptions. The
+search is case-insensitive, and an item must contain every supplied keyword in
+any order. Matching items retain their original item numbers. If no items
+match, MeepMoop displays the requested keywords.
+
+```text
+find book flight
+```
+
 ## Booking and unbooking
 
 Use `book <item number>` or `unbook <item number>`. The item number must be a

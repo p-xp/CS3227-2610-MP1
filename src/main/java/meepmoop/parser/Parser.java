@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +27,8 @@ public final class Parser {
             "Invalid transport format. Use: transport <name> /from <location> /to <location>";
     private static final String INVALID_ITEM_NUMBER = "Invalid item number";
     private static final String INVALID_VIEW_DATE = "Invalid view date. Use: view YYYY-MM-DD";
+    private static final String INVALID_FIND_FORMAT =
+            "Invalid find format. Use: find <keyword> [<keyword>...]";
     private static final DateTimeFormatter DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT);
     private static final Pattern MARKER_PATTERN = Pattern.compile(
@@ -41,6 +44,7 @@ public final class Parser {
         DELETE,
         LIST,
         VIEW,
+        FIND,
         EXIT
     }
 
@@ -143,6 +147,7 @@ public final class Parser {
         case "delete" -> parseItemCommand(CommandType.DELETE, details);
         case "list" -> parseArgumentlessCommand(CommandType.LIST, details);
         case "view" -> parseView(details);
+        case "find" -> parseFind(details);
         case "exit" -> parseArgumentlessCommand(CommandType.EXIT, details);
         default -> throw new MeepException(INVALID_INPUT);
         };
@@ -262,5 +267,14 @@ public final class Parser {
         } catch (DateTimeParseException exception) {
             throw new MeepException(INVALID_VIEW_DATE);
         }
+    }
+
+    /** Validates and normalizes one or more description keywords for a find command. */
+    private static ParsedCommand parseFind(String details) throws MeepException {
+        if (details.isEmpty()) {
+            throw new MeepException(INVALID_FIND_FORMAT);
+        }
+        String normalizedKeywords = String.join(" ", List.of(details.split("\\s+")));
+        return new ParsedCommand(CommandType.FIND, normalizedKeywords, null, null, null, 0);
     }
 }

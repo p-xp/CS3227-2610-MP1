@@ -64,6 +64,23 @@ class CommandTest {
     }
 
     @Test
+    void findCommand_executeShowsOriginalNumbersForMatchingPlans() throws MeepException {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Activity("Read Book"));
+        itinerary.add(new Activity("Book Tokyo Flight"));
+        itinerary.add(new Activity("Return book"));
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        try (PrintStream output = new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)) {
+            new FindCommand("book flight").execute(itinerary, new Ui(output), storage());
+        }
+
+        assertEquals(3, itinerary.getCount());
+        assertEquals("Here are the matching items in your itinerary:" + System.lineSeparator()
+                + "2. [A] [ ] Book Tokyo Flight" + System.lineSeparator()
+                + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
     void viewCommand_executeShowsOnlyPlansOnRequestedDate() throws MeepException {
         Itinerary itinerary = new Itinerary();
         itinerary.add(new Activity("Museum", LocalDate.of(2026, 9, 1).atTime(10, 0)));

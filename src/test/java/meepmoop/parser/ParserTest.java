@@ -74,6 +74,15 @@ class ParserTest {
         assertEquals(LocalDate.of(2026, 9, 1), view.getFrom());
     }
 
+    @Test
+    void parse_findWithMultipleKeywords_returnsNormalizedKeywords() throws MeepException {
+        Parser.ParsedCommand command = parser.parse("  FiNd   book   flight  ");
+
+        assertAll(
+                () -> assertEquals(Parser.CommandType.FIND, command.getType()),
+                () -> assertEquals("book flight", command.getDescription()));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"activity Dinner /at 2026-02-30 1800", "activity Dinner /at 2026-09-01 2460",
         "view", "view 2026-02-30", "view 2026-09-01 1200 extra"})
@@ -120,6 +129,12 @@ class ParserTest {
     @ValueSource(strings = {"activity", "activity   "})
     void parse_activityWithoutDescription_throwsActivityFormatError(String input) {
         assertParseError(input, "Invalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"find", "find   "})
+    void parse_findWithoutKeywords_throwsFindFormatError(String input) {
+        assertParseError(input, "Invalid find format. Use: find <keyword> [<keyword>...]");
     }
 
     @ParameterizedTest

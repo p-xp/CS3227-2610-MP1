@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -181,6 +182,18 @@ class ItineraryTest {
         assertEquals(2, itinerary.getPlansOn(LocalDate.of(2026, 9, 2)).size());
         assertEquals(1, itinerary.getPlansOn(LocalDate.of(2026, 9, 3)).size());
         assertEquals(0, itinerary.getPlansOn(LocalDate.of(2026, 9, 4)).size());
+    }
+
+    @Test
+    void getPlanNumbersMatchingKeywords_returnsCaseInsensitiveAndMatchesInListOrder() {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Activity("Read Book"));
+        itinerary.add(new Activity("Book Tokyo Flight"));
+        itinerary.add(new Activity("Return book"));
+
+        assertEquals(List.of(2), itinerary.getPlanNumbersMatchingKeywords(List.of("book", "flight")));
+        assertEquals(List.of(1, 2, 3), itinerary.getPlanNumbersMatchingKeywords(List.of("BOOK")));
+        assertEquals(List.of(), itinerary.getPlanNumbersMatchingKeywords(List.of("hotel")));
     }
 
     /** Creates an itinerary containing the requested number of valid plans. */

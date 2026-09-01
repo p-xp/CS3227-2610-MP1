@@ -9,6 +9,7 @@ import meepmoop.command.BookingCommand;
 import meepmoop.command.Command;
 import meepmoop.command.DeleteCommand;
 import meepmoop.command.ExitCommand;
+import meepmoop.command.FindCommand;
 import meepmoop.command.ListCommand;
 import meepmoop.command.StayCommand;
 import meepmoop.command.TransportCommand;
@@ -114,6 +115,8 @@ public class MeepMoop {
                 return executeCommand(new ListCommand());
             case VIEW:
                 return executeCommand(new ViewCommand(command.getFrom()));
+            case FIND:
+                return executeCommand(new FindCommand(command.getDescription()));
             case EXIT:
                 return executeCommand(new ExitCommand());
             }

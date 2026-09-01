@@ -120,6 +120,15 @@ paired with its exact expected output.
 - Expected output: The first view contains both matching items, the invalid
   input shows the date error, and the final view contains only the stay.
 
+### 15. Find items by description keywords
+
+- Aim: Confirm that `find` matches every case-insensitive keyword in any order,
+  preserves original item numbers, and reports no matches or missing keywords.
+- Inputs: Add three activities, find two keywords, find a nonmatching keyword,
+  submit `find` without keywords, then exit.
+- Expected output: The multi-keyword search returns only item 2, the no-match
+  response echoes the keyword, and the missing-keyword response shows its format.
+
 <!-- test-ui:begin -->
 [
   {
@@ -400,6 +409,17 @@ paired with its exact expected output.
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Dinner /at 2026-09-02 1800' 'stay Hotel /from 2026-09-01 /to 2026-09-03' 'view 2026-09-02 2359' 'view 2026-02-30' 'view 2026-09-03' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
         "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Dinner (at: 2 Sep 2026 6pm)\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this accommodation:\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nHere are the items in your itinerary on 2 Sep 2026:\n[A] [ ] Dinner (at: 2 Sep 2026 6pm)\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n____________________________________________________________\nInvalid view date. Use: view YYYY-MM-DD\n____________________________________________________________\nHere are the items in your itinerary on 3 Sep 2026:\n[S] [ ] Hotel (from: 1 Sep 2026 to: 3 Sep 2026)\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "Find items by description keywords",
+    "aim": "Match all case-insensitive description keywords and preserve original item numbers.",
+    "inputs": ["activity Read Book", "activity Book Tokyo Flight", "activity Return book", "find BOOK flight", "find hotel", "find", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Read Book' 'activity Book Tokyo Flight' 'activity Return book' 'find BOOK flight' 'find hotel' 'find' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Read Book\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Book Tokyo Flight\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Return book\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the matching items in your itinerary:\n2. [A] [ ] Book Tokyo Flight\n____________________________________________________________\nNo match found for keyword \"hotel\".\n____________________________________________________________\nInvalid find format. Use: find <keyword> [<keyword>...]\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   }
