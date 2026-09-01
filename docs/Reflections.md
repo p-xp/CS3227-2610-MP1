@@ -4,11 +4,12 @@ Developing Voyager with an LLM changed the way I approached software
 engineering. I found the AI most useful when I treated it as a collaborator
 that could propose and implement a focused change, while I retained control of
 the requirements, review points, and final decisions. The following prompts
-were particularly useful because they made that division of responsibility
-clear.
+were particularly insightful in helping me learn how I should work with the 
+agent and where the collaboration could potentially break down.
 
 ## 1. Breaking a large refactoring into reviewable increments
 
+Following the suggested prompt in the development guide, I instructed the agent:
 > “Let's do this iteratively. In each iteration, do the following steps:
 > 1. Decide the next natural stand-alone increment that moves the code closer
 > to the target. Describe it to me and obtain approval.
@@ -58,7 +59,8 @@ recognising that the implementation did not satisfy the intended user
 experience. An LLM can implement visuals well from concise descriptions, but
 it cannot reliably infer every spatial intention. I should give measurable UI
 requirements where possible and manually check layout, resizing, and
-interaction behaviour after each change.
+interaction behaviour after each change, or implement UI tests to automate
+this process.
 
 ## 3. Turning engineering rules into reusable AI guidance
 
@@ -73,14 +75,14 @@ review and update the JUnit tests and UI test plan as part of its normal
 workflow. Similar project-specific guidance was added for the Java coding
 standard and Git conventions.
 
-The main lesson is that prompting is not limited to individual feature
-requests. Reusable instructions can establish a development process for the
-whole repository. They improve consistency and reduce repeated manual work,
-especially for routine but important tasks such as test maintenance, UI test
-coverage, formatting, and commit-message conventions. I still need to review
-whether the generated tests are meaningful and whether they cover negative and
-boundary cases, but the rules make it far less likely that those checks are
-forgotten entirely.
+The main lesson I learnt from this is that prompting is not limited to 
+individual feature requests. Reusable instructions can establish a development 
+process for the whole repository. They improve consistency and reduce repeated 
+manual work, especially for routine but important tasks such as test 
+maintenance, UI test coverage, formatting, and commit-message conventions. 
+I still need to review whether the generated tests are meaningful and whether 
+they cover negative and boundary cases, but the rules make it far less likely 
+that those checks are forgotten entirely.
 
 ## Conclusion
 
