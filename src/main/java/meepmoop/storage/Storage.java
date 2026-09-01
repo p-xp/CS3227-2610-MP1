@@ -150,7 +150,11 @@ public class Storage {
             return new Activity(decodeNonempty(fields[2]));
         }
         requireFieldCount(fields, 4);
-        return new Activity(decodeNonempty(fields[2]), LocalDateTime.parse(decodeNonempty(fields[3])));
+        try {
+            return new Activity(decodeNonempty(fields[2]), LocalDateTime.parse(decodeNonempty(fields[3])));
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("invalid activity date", exception);
+        }
     }
 
     /** Parses an accommodation record and validates its chronological ISO dates. */

@@ -1,6 +1,9 @@
 package meepmoop.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -79,5 +82,25 @@ class UiTest {
                 + SEPARATOR + newline;
 
         assertEquals(expected, capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void responseStatus_errorThenClear_updatesErrorFlag() {
+        Ui ui = new Ui(new PrintStream(new ByteArrayOutputStream()));
+
+        assertFalse(ui.isLastResponseError());
+        ui.showSaveError();
+        assertTrue(ui.isLastResponseError());
+        ui.clearResponseStatus();
+        assertFalse(ui.isLastResponseError());
+        ui.showItineraryFull();
+        assertTrue(ui.isLastResponseError());
+    }
+
+    @Test
+    void constructor_nullOutput_throwsDescriptiveException() {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> new Ui(null));
+
+        assertEquals("output must not be null", exception.getMessage());
     }
 }

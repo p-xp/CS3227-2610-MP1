@@ -27,7 +27,8 @@ paired with its exact expected output.
 - Aim: Confirm that malformed add commands and an unknown command are rejected
   without changing existing itinerary items.
 - Inputs: Add a valid activity, enter malformed stay, transport, and activity
-  commands followed by an unknown command, list the itinerary, then exit.
+  commands (including duplicate `/at` markers) followed by an unknown command,
+  list the itinerary, then exit.
 - Expected output: Each bad input shows its documented error and the final
   `list` command confirms a refresh without altering the original activity.
 
@@ -156,11 +157,11 @@ paired with its exact expected output.
   {
     "name": "Invalid add commands preserve state",
     "aim": "Reject malformed add and unknown commands without changing the itinerary.",
-    "inputs": ["activity Park", "stay bad", "transport bad", "activity", "wat", "list", "exit"],
+    "inputs": ["activity Park", "stay bad", "transport bad", "activity", "activity Park /at 2026-09-01 0900 /at 2026-09-02 0900", "wat", "list", "exit"],
     "commands": [
       {
-        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Park' 'stay bad' 'transport bad' 'activity' 'wat' 'list' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
-        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Park\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nInvalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]\n____________________________________________________________\nInvalid input\n____________________________________________________________\nList has been manually refreshed.\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Park' 'stay bad' 'transport bad' 'activity' 'activity Park /at 2026-09-01 0900 /at 2026-09-02 0900' 'wat' 'list' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Park\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nInvalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]\n____________________________________________________________\nInvalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]\n____________________________________________________________\nInvalid input\n____________________________________________________________\nList has been manually refreshed.\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   },

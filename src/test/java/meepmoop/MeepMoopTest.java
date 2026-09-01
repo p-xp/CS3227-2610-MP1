@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import meepmoop.model.Activity;
 import meepmoop.model.Itinerary;
+import meepmoop.model.PlanType;
 import meepmoop.parser.Parser;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;
@@ -101,6 +103,83 @@ class MeepMoopTest {
 
         meepMoop.handleCommand("list");
         assertTrue(meepMoop.wasLastCommandValid());
+    }
+
+    @Test
+    void handleCommand_endToEndSequencePersistsRequestedChanges() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("data.txt");
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        MeepMoop meepMoop = new MeepMoop(dataFile,
+                new Ui(new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)));
+
+        assertTrue(meepMoop.handleCommand("activity Museum /at 2026-09-01 0900"));
+        assertTrue(meepMoop.handleCommand("book 1"));
+        assertTrue(meepMoop.handleCommand("find museum"));
+        assertTrue(meepMoop.handleCommand("view 2026-09-01"));
+        assertTrue(meepMoop.handleCommand("delete 1"));
+        assertFalse(meepMoop.handleCommand("exit"));
+
+        assertEquals(0, meepMoop.getItinerary().getCount());
+        assertEquals(0, new Storage(dataFile).load().getItinerary().getCount());
+        assertTrue(capturedBytes.toString(StandardCharsets.UTF_8).contains("Booked: [A] [X] Museum"));
+        assertTrue(capturedBytes.toString(StandardCharsets.UTF_8)
+                .contains("Here are the matching items in your itinerary:"));
+    }
+
+    @Test
+    void run_corruptedSavedDataShowsWarningAndProcessesCommands() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("data.txt");
+        Files.writeString(dataFile, "bad record" + System.lineSeparator(), StandardCharsets.UTF_8);
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        Ui ui = new Ui(new PrintStream(capturedBytes, true, StandardCharsets.UTF_8));
+        MeepMoop meepMoop = new MeepMoop(dataFile, ui);
+        java.io.InputStream originalInput = System.in;
+        try {
+            System.setIn(new ByteArrayInputStream("list\nexit\n".getBytes(StandardCharsets.UTF_8)));
+            meepMoop.run();
+        } finally {
+            System.setIn(originalInput);
+        }
+
+        String output = capturedBytes.toString(StandardCharsets.UTF_8);
+        assertTrue(output.contains("Warning: Some saved data could not be loaded."));
+        assertTrue(output.contains("List has been manually refreshed."));
+        assertTrue(output.contains("Goodbye! Have a great day!"));
+    }
+
+    @Test
+    void run_loadingFailureDoesNotStartCommandLoop() throws IOException {
+        Path dataFile = Files.createDirectory(temporaryDirectory.resolve("data-directory"));
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        MeepMoop meepMoop = new MeepMoop(dataFile,
+                new Ui(new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)));
+
+        meepMoop.run();
+
+        assertEquals("Unable to load saved data." + System.lineSeparator()
+                + "____________________________________________________________" + System.lineSeparator(),
+                capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void handleCommand_remainingValidCommandsPersistTheirExpectedPlans() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("data.txt");
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        MeepMoop meepMoop = new MeepMoop(dataFile,
+                new Ui(new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)));
+
+        assertTrue(meepMoop.handleCommand("stay Hotel /from 2026-09-01 /to 2026-09-03"));
+        assertTrue(meepMoop.handleCommand("transport Flight /from Singapore /to Tokyo"));
+        assertTrue(meepMoop.handleCommand("book 2"));
+        assertTrue(meepMoop.handleCommand("unbook 2"));
+        assertTrue(meepMoop.handleCommand("list"));
+
+        Itinerary loadedItinerary = new Storage(dataFile).load().getItinerary();
+        assertEquals(2, loadedItinerary.getCount());
+        assertEquals(PlanType.ACCOMMODATION, loadedItinerary.get(1).getType());
+        assertEquals(PlanType.TRANSPORT, loadedItinerary.get(2).getType());
+        assertFalse(loadedItinerary.get(2).isBooked());
+        assertTrue(capturedBytes.toString(StandardCharsets.UTF_8).contains("Unbooked: [T] [ ] Flight"));
     }
 
     /** Creates storage whose parent path is a file, forcing every save to fail. */

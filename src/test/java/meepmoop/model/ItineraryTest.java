@@ -185,6 +185,25 @@ class ItineraryTest {
     }
 
     @Test
+    void getPlansOn_returnsMatchingPlansInItineraryOrderWithoutChangingItinerary() {
+        Itinerary itinerary = new Itinerary();
+        Activity first = new Activity("First", LocalDate.of(2026, 9, 1).atTime(9, 0));
+        Activity nonMatching = new Activity("Other", LocalDate.of(2026, 9, 2).atTime(9, 0));
+        Accommodation third = new Accommodation("Hotel", LocalDate.of(2026, 9, 1),
+                LocalDate.of(2026, 9, 3));
+        itinerary.add(first);
+        itinerary.add(nonMatching);
+        itinerary.add(third);
+
+        List<Plan> matchingPlans = itinerary.getPlansOn(LocalDate.of(2026, 9, 1));
+        matchingPlans.clear();
+
+        assertEquals(3, itinerary.getCount());
+        assertSame(first, itinerary.get(1));
+        assertSame(third, itinerary.getPlansOn(LocalDate.of(2026, 9, 1)).get(1));
+    }
+
+    @Test
     void getPlanNumbersMatchingKeywords_returnsCaseInsensitiveAndMatchesInListOrder() {
         Itinerary itinerary = new Itinerary();
         itinerary.add(new Activity("Read Book"));

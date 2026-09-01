@@ -164,7 +164,9 @@ public final class Parser {
         }
         String description = details.substring(0, marker).trim();
         String dateTimeText = details.substring(marker + 5).trim();
-        if (description.isEmpty() || dateTimeText.toLowerCase(Locale.ROOT).contains(" /at ")) {
+        if (description.isEmpty()
+                || description.toLowerCase(Locale.ROOT).contains(" /at ")
+                || dateTimeText.toLowerCase(Locale.ROOT).contains(" /at ")) {
             throw new MeepException(INVALID_ACTIVITY_FORMAT);
         }
         try {

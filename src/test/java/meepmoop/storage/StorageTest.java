@@ -2,6 +2,7 @@ package meepmoop.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -149,6 +150,35 @@ class StorageTest {
         Path dataFile = Files.createDirectory(temporaryDirectory.resolve("directory.txt"));
 
         assertThrows(IOException.class, () -> new Storage(dataFile).load());
+    }
+
+    @Test
+    void load_legacyAndMalformedDatedActivities_keepsOnlyLegacyActivity() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("data.txt");
+        Files.write(dataFile, List.of(
+                activityRecord("Legacy", false),
+                "A | 0 | " + encode("Bad timestamp") + " | " + encode("not-a-date-time"),
+                "A | 0 | " + encode("Too many") + " | " + encode("2026-09-01T18:00")
+                        + " | " + encode("extra")), StandardCharsets.UTF_8);
+
+        Storage.LoadResult result = new Storage(dataFile).load();
+
+        assertTrue(result.hasCorruptedRecords());
+        assertEquals(1, result.getItinerary().getCount());
+        assertEquals("Legacy", result.getItinerary().get(1).getDescription());
+        assertNull(((Activity) result.getItinerary().get(1)).getScheduledAt());
+    }
+
+    @Test
+    void constructorAndSave_nullArgumentsThrowDescriptiveExceptions() {
+        NullPointerException constructorException = assertThrows(
+                NullPointerException.class, () -> new Storage(null));
+        Storage storage = new Storage(temporaryDirectory.resolve("data.txt"));
+        NullPointerException saveException = assertThrows(
+                NullPointerException.class, () -> storage.save(null));
+
+        assertEquals("dataFile must not be null", constructorException.getMessage());
+        assertEquals("itinerary must not be null", saveException.getMessage());
     }
 
     @Test

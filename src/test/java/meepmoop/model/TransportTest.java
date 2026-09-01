@@ -1,6 +1,9 @@
 package meepmoop.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,5 +25,12 @@ class TransportTest {
         transport.setBooked(true);
 
         assertEquals("[T] [X] Flight (from: Singapore to: Tokyo)", transport.toString());
+    }
+
+    @Test
+    void occursOn_transportWithoutDate_returnsFalse() {
+        Transport transport = new Transport("Flight", "Singapore", "Tokyo");
+
+        assertFalse(transport.occursOn(LocalDate.of(2026, 9, 1)));
     }
 }

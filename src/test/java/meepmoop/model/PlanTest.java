@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 
 /** Tests the shared type, description, booking state, and display behavior of plans. */
@@ -36,6 +38,13 @@ class PlanTest {
 
         plan.setBooked(true);
         assertEquals("[A] [X] ", plan.displayPrefix());
+    }
+
+    @Test
+    void occursOn_basePlanWithoutDate_returnsFalse() {
+        TestPlan plan = new TestPlan("Museum");
+
+        assertFalse(plan.occursOn(LocalDate.of(2026, 9, 1)));
     }
 
     /** Minimal concrete plan used to expose protected behavior for testing. */

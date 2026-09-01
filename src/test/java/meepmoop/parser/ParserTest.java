@@ -127,6 +127,19 @@ class ParserTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {
+        "activity Museum /at 2026-09-01",
+        "activity Museum /at 2026-09-01 1800 /at 2026-09-02 1800"
+    })
+    void parse_activityWithMalformedAtMarker_throwsSpecificError(String input) {
+        String expectedMessage = input.endsWith("2026-09-01")
+                ? "Invalid activity date. Use: YYYY-MM-DD HHmm"
+                : "Invalid activity format. Use: activity <description> [/at YYYY-MM-DD HHmm]";
+
+        assertParseError(input, expectedMessage);
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {"find", "find   "})
     void parse_findWithoutKeywords_throwsFindFormatError(String input) {
         assertParseError(input, "Invalid find format. Use: find <keyword> [<keyword>...]");

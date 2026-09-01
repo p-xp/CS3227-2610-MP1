@@ -2,6 +2,8 @@ package meepmoop.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -159,6 +161,79 @@ class CommandTest {
     }
 
     @Test
+    void bookingCommand_unbookUpdatesBookingStateAndSaves() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        activity.setBooked(true);
+        itinerary.add(activity);
+        Storage storage = storage();
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        try (PrintStream output = new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)) {
+            new BookingCommand(1, false).execute(itinerary, new Ui(output), storage);
+        }
+
+        assertFalse(activity.isBooked());
+        assertFalse(storage.load().getItinerary().get(1).isBooked());
+        assertEquals("Unbooked: [A] [ ] Museum" + System.lineSeparator()
+                + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void bookingCommand_whenUnbookingCannotBeSaved_restoresBookedState() throws MeepException, IOException {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        activity.setBooked(true);
+        itinerary.add(activity);
+        Path blocker = Files.createFile(temporaryDirectory.resolve("unbooking-blocker"));
+        Storage failingStorage = new Storage(blocker.resolve("meepmoop.txt"));
+
+        new BookingCommand(1, false).execute(itinerary, new Ui(), failingStorage);
+
+        assertTrue(activity.isBooked());
+    }
+
+    @Test
+    void bookingCommand_invalidPlanNumber_throwsExceptionWithoutChangingItinerary() {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        itinerary.add(activity);
+
+        MeepException exception = assertThrows(
+                MeepException.class, () -> new BookingCommand(2, true).execute(itinerary, new Ui(), storage()));
+
+        assertEquals("Invalid item number", exception.getMessage());
+        assertFalse(activity.isBooked());
+    }
+
+    @Test
+    void bookingCommand_alreadyBookedPlan_throwsExceptionWithoutSaving() {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        activity.setBooked(true);
+        itinerary.add(activity);
+
+        MeepException exception = assertThrows(
+                MeepException.class, () -> new BookingCommand(1, true).execute(itinerary, new Ui(), storage()));
+
+        assertEquals("Item is already booked", exception.getMessage());
+        assertTrue(activity.isBooked());
+    }
+
+    @Test
+    void deleteCommand_invalidPlanNumber_throwsExceptionWithoutChangingItinerary() {
+        Itinerary itinerary = new Itinerary();
+        Activity activity = new Activity("Museum");
+        itinerary.add(activity);
+
+        MeepException exception = assertThrows(
+                MeepException.class, () -> new DeleteCommand(2).execute(itinerary, new Ui(), storage()));
+
+        assertEquals("Invalid item number", exception.getMessage());
+        assertEquals(1, itinerary.getCount());
+        assertSame(activity, itinerary.get(1));
+    }
+
+    @Test
     void activityCommand_executeAddsActivityAndSaves() throws IOException {
         Itinerary itinerary = new Itinerary();
         Storage storage = storage();
@@ -181,6 +256,17 @@ class CommandTest {
     }
 
     @Test
+    void activityCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+        Itinerary itinerary = fullItinerary();
+        Storage storage = storage();
+
+        new ActivityCommand("Museum", null).execute(itinerary, new Ui(), storage);
+
+        assertEquals(100, itinerary.getCount());
+        assertFalse(Files.exists(temporaryDirectory.resolve("meepmoop.txt")));
+    }
+
+    @Test
     void stayCommand_executeAddsStayAndSaves() throws IOException {
         Itinerary itinerary = new Itinerary();
         Storage storage = storage();
@@ -190,6 +276,18 @@ class CommandTest {
 
         assertEquals(1, itinerary.getCount());
         assertEquals(PlanType.ACCOMMODATION, storage.load().getItinerary().get(1).getType());
+    }
+
+    @Test
+    void stayCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+        Itinerary itinerary = fullItinerary();
+        Storage storage = storage();
+
+        new StayCommand("Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3))
+                .execute(itinerary, new Ui(), storage);
+
+        assertEquals(100, itinerary.getCount());
+        assertFalse(Files.exists(temporaryDirectory.resolve("meepmoop.txt")));
     }
 
     @Test
@@ -203,8 +301,39 @@ class CommandTest {
         assertEquals(PlanType.TRANSPORT, storage.load().getItinerary().get(1).getType());
     }
 
+    @Test
+    void transportCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+        Itinerary itinerary = fullItinerary();
+        Storage storage = storage();
+
+        new TransportCommand("Flight", "Singapore", "Tokyo").execute(itinerary, new Ui(), storage);
+
+        assertEquals(100, itinerary.getCount());
+        assertFalse(Files.exists(temporaryDirectory.resolve("meepmoop.txt")));
+    }
+
+    @Test
+    void findAndViewCommands_nullArgumentsThrowDescriptiveExceptions() {
+        NullPointerException findException = assertThrows(
+                NullPointerException.class, () -> new FindCommand(null));
+        NullPointerException viewException = assertThrows(
+                NullPointerException.class, () -> new ViewCommand(null));
+
+        assertEquals("keywords must not be null", findException.getMessage());
+        assertEquals("date must not be null", viewException.getMessage());
+    }
+
     /** Returns storage that cannot be affected because these commands do not save. */
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("meepmoop.txt"));
+    }
+
+    /** Returns an itinerary containing its maximum permitted number of activity plans. */
+    private static Itinerary fullItinerary() {
+        Itinerary itinerary = new Itinerary();
+        for (int planNumber = 1; planNumber <= 100; planNumber++) {
+            assertTrue(itinerary.add(new Activity("Plan " + planNumber)));
+        }
+        return itinerary;
     }
 }
