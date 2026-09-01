@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -47,6 +48,7 @@ public final class MainWindow extends Application {
     };
 
     private final ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
+    private final CommandHistory commandHistory = new CommandHistory();
     private final VBox conversation = new VBox(10);
     private final VBox itineraryItems = new VBox(8);
     private Voyager voyager;
@@ -199,6 +201,13 @@ public final class MainWindow extends Application {
         commandInput.setPromptText(INPUT_PROMPT);
         commandInput.setStyle("-fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 10 12;");
         commandInput.setOnAction(event -> submitCommand());
+        commandInput.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP && commandHistory.hasMostRecentCommand()) {
+                commandInput.setText(commandHistory.getMostRecentCommand());
+                commandInput.positionCaret(commandInput.getLength());
+                event.consume();
+            }
+        });
         HBox.setHgrow(commandInput, Priority.ALWAYS);
 
         sendButton = new Button("Send");
@@ -220,6 +229,7 @@ public final class MainWindow extends Application {
             return;
         }
 
+        commandHistory.record(command);
         showUserMessage(command);
         commandInput.clear();
         if (command.equalsIgnoreCase("help")) {

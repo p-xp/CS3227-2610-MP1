@@ -142,6 +142,17 @@ paired with its exact expected output.
   `Show` restores the full command-reference panel. Each `help` command also
   toggles the panel and confirms whether it was shown or hidden in the chat.
 
+### 17. GUI command recall
+
+- Aim: Confirm that the up-arrow key recalls the latest submitted command for
+  correction and resubmission.
+- Inputs: Launch the graphical application, enter an invalid command, press the
+  up-arrow key in the command field, correct the command, and submit it.
+- Expected output: Pressing the up-arrow key replaces the command-field text
+  with the most recent non-empty submitted command, including an invalid one.
+  The recalled text is editable, and submitting the corrected command produces
+  the normal response.
+
 <!-- test-ui:begin -->
 [
   {
