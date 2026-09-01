@@ -30,11 +30,30 @@ public final class MainWindow extends Application {
     private static final String INPUT_PROMPT = "Enter a command, e.g. activity Museum";
     private static final String ACCENT_COLOR = "#f97316";
     private static final String ERROR_COLOR = "#b91c1c";
+    private static final double SIDEBAR_WIDTH = 220;
+    private static final double COLLAPSED_COMMAND_PANEL_WIDTH = 64;
+    private static final String[] COMMAND_REFERENCE = {
+        "activity <description> [/at YYYY-MM-DD HHmm]",
+        "stay <name> /from <date> /to <date>",
+        "transport <name> /from <location> /to <location>",
+        "book <item number>",
+        "unbook <item number>",
+        "delete <item number>",
+        "list",
+        "view <date>",
+        "find <keywords>",
+        "help (toggle this panel)",
+        "exit"
+    };
 
     private final ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
     private final VBox conversation = new VBox(10);
     private final VBox itineraryItems = new VBox(8);
     private MeepMoop meepMoop;
+    private ScrollPane commandReferencePane;
+    private VBox commandReferencePanel;
+    private Label commandReferenceTitle;
+    private Button commandReferenceToggleButton;
     private ScrollPane conversationPane;
     private TextField commandInput;
     private Button sendButton;
@@ -59,9 +78,9 @@ public final class MainWindow extends Application {
         showBotResponse("Hello! I'm MeepMoop. How can I assist you today?");
         refreshItineraryList();
 
-        Scene scene = new Scene(root, 1060, 680);
+        Scene scene = new Scene(root, 1180, 680);
         stage.setTitle(WINDOW_TITLE);
-        stage.setMinWidth(840);
+        stage.setMinWidth(900);
         stage.setMinHeight(520);
         stage.setScene(scene);
         stage.show();
@@ -79,17 +98,19 @@ public final class MainWindow extends Application {
         return header;
     }
 
-    /** Creates the itinerary sidebar and chat panel in a 30-70 horizontal split. */
+    /** Creates the itinerary, chat, and command-reference panels. */
     private HBox createMainContent() {
         VBox itineraryPanel = createItineraryPanel();
+        commandReferencePanel = createCommandReferencePanel();
         VBox chatPanel = new VBox(12, createConversationPane(), createInputBar());
-        itineraryPanel.setMinWidth(240);
-        chatPanel.setMinWidth(520);
-        HBox.setHgrow(itineraryPanel, Priority.ALWAYS);
+        itineraryPanel.setPrefWidth(SIDEBAR_WIDTH);
+        itineraryPanel.setMinWidth(SIDEBAR_WIDTH);
+        itineraryPanel.setMaxWidth(SIDEBAR_WIDTH);
+        setCommandReferencePanelWidth(SIDEBAR_WIDTH);
+        chatPanel.setMinWidth(420);
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
-        itineraryPanel.prefWidthProperty().bind(chatPanel.widthProperty().multiply(3.0 / 7.0));
         VBox.setVgrow(conversationPane, Priority.ALWAYS);
-        HBox mainContent = new HBox(18, itineraryPanel, chatPanel);
+        HBox mainContent = new HBox(18, itineraryPanel, chatPanel, commandReferencePanel);
         HBox.setHgrow(chatPanel, Priority.ALWAYS);
         return mainContent;
     }
@@ -106,6 +127,60 @@ public final class MainWindow extends Application {
         VBox itineraryPanel = new VBox(10, title, itineraryPane);
         VBox.setVgrow(itineraryPane, Priority.ALWAYS);
         return itineraryPanel;
+    }
+
+    /** Creates a collapsible reference list of commands accepted by the chatbot. */
+    private VBox createCommandReferencePanel() {
+        commandReferenceTitle = new Label("COMMANDS");
+        commandReferenceTitle.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: "
+                + ACCENT_COLOR + ";");
+
+        commandReferenceToggleButton = new Button("Hide");
+        commandReferenceToggleButton.setStyle("-fx-background-color: transparent; -fx-text-fill: " + ACCENT_COLOR
+                + "; -fx-font-size: 11px; -fx-font-weight: bold;");
+        commandReferenceToggleButton.setOnAction(event -> toggleCommandReference());
+        HBox heading = new HBox(commandReferenceTitle, commandReferenceToggleButton);
+        HBox.setHgrow(commandReferenceTitle, Priority.ALWAYS);
+        heading.setAlignment(Pos.CENTER_LEFT);
+
+        VBox commandItems = new VBox(8);
+        commandItems.setPadding(new Insets(4));
+        for (String command : COMMAND_REFERENCE) {
+            Label commandLabel = new Label(command);
+            commandLabel.setWrapText(true);
+            commandLabel.setMaxWidth(SIDEBAR_WIDTH - 24);
+            commandLabel.setStyle("-fx-background-color: #fff7ed; -fx-border-color: #fed7aa;"
+                    + " -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"
+                    + " -fx-text-fill: #374151; -fx-font-family: 'Monospaced'; -fx-font-size: 11px;");
+            commandItems.getChildren().add(commandLabel);
+        }
+
+        commandReferencePane = new ScrollPane(commandItems);
+        commandReferencePane.setFitToWidth(true);
+        commandReferencePane.setStyle("-fx-background: #ffffff; -fx-background-color: #ffffff;"
+                + " -fx-border-color: #fed7aa; -fx-border-radius: 10; -fx-background-radius: 10;");
+        VBox commandReferencePanel = new VBox(10, heading, commandReferencePane);
+        VBox.setVgrow(commandReferencePane, Priority.ALWAYS);
+        return commandReferencePanel;
+    }
+
+    /** Collapses or expands the command-reference panel to adjust the chat panel's available space. */
+    private boolean toggleCommandReference() {
+        boolean isShowing = commandReferencePane.isVisible();
+        commandReferencePane.setVisible(!isShowing);
+        commandReferencePane.setManaged(!isShowing);
+        commandReferenceTitle.setVisible(!isShowing);
+        commandReferenceTitle.setManaged(!isShowing);
+        commandReferenceToggleButton.setText(isShowing ? "Show" : "Hide");
+        setCommandReferencePanelWidth(isShowing ? COLLAPSED_COMMAND_PANEL_WIDTH : SIDEBAR_WIDTH);
+        return !isShowing;
+    }
+
+    /** Sets the command-reference panel's fixed width for its expanded or collapsed state. */
+    private void setCommandReferencePanelWidth(double width) {
+        commandReferencePanel.setPrefWidth(width);
+        commandReferencePanel.setMinWidth(width);
+        commandReferencePanel.setMaxWidth(width);
     }
 
     /** Creates the scrolling transcript area. */
@@ -147,6 +222,11 @@ public final class MainWindow extends Application {
 
         showUserMessage(command);
         commandInput.clear();
+        if (command.equalsIgnoreCase("help")) {
+            boolean isPanelShown = toggleCommandReference();
+            showCommandReferenceStatus(isPanelShown);
+            return;
+        }
         boolean isRunning = meepMoop.handleCommand(command);
         showBotResponse(readResponse());
         if (meepMoop.wasLastCommandValid()) {
@@ -156,6 +236,12 @@ public final class MainWindow extends Application {
             showBotResponse("Goodbye! Have a great day!");
             closeApplication();
         }
+    }
+
+    /** Displays a confirmation that the command-reference panel changed visibility. */
+    private void showCommandReferenceStatus(boolean isPanelShown) {
+        String message = isPanelShown ? "Command reference shown." : "Command reference hidden.";
+        addMessage(message, Pos.CENTER_LEFT, "#ffffff", "#e5e7eb");
     }
 
     /** Closes the JavaFX window and ends the application after the exit command. */

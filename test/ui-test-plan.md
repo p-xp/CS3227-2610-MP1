@@ -130,6 +130,18 @@ paired with its exact expected output.
 - Expected output: The multi-keyword search returns only item 2, the no-match
   response echoes the keyword, and the missing-keyword response shows its format.
 
+### 16. GUI command reference
+
+- Aim: Confirm that the graphical interface shows a command-reference panel to
+  the right of the chat panel.
+- Inputs: Launch the graphical application, select `Hide`, then `Show`, and
+  enter `help` twice in the command field.
+- Expected output: The expanded right panel has the same width as the itinerary
+  panel and lists the available commands. Selecting `Hide` collapses it
+  horizontally to a `Show` control, giving the chat panel more space; selecting
+  `Show` restores the full command-reference panel. Each `help` command also
+  toggles the panel and confirms whether it was shown or hidden in the chat.
+
 <!-- test-ui:begin -->
 [
   {
