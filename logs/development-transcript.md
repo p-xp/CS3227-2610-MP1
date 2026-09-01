@@ -4,134 +4,8 @@ This focused record preserves exact prompts that direct or review Voyager featur
 
 Tasks are ordered by their recorded creation time.
 
-## Check project installations
+## Redesign banner
 
-- Task ID: `01a052d6-976a-7e53-a78c-2af7cb8023d6`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
-
-#### User prompt
-
-````text
-Check if the current mac has all the required installations for this project
-````
-#### Assistant final response
-
-````text
-The Mac does not currently have all required installations for this project.
-
-- **JDK 25:** Missing. `java` and `javac` cannot locate a runtime.
-- **IntelliJ IDEA:** Not detected in Applications.
-- **Maven/Gradle:** Not required by this starter project.
-- **Git:** Installed (`2.50.1`).
-- **Homebrew:** Installed (`6.0.20`).
-- **Architecture:** Apple Silicon (`arm64`).
-
-You need to install JDK 25 and IntelliJ IDEA. The repository contains no build-tool configuration, so Maven or Gradle are currently unnecessary.
-````
-#### User prompt
-
-````text
-I wish to change the chatbot name from duke to MeepMoop.
-  Which files need to be changed in what way?
-````
-#### Assistant final response
-
-````text
-For the current starter project, change these files:
-
-1. Rename the Java file:
-
-```text
-src/main/java/Duke.java
-```
-
-to:
-
-```text
-src/main/java/MeepMoop.java
-```
-
-2. Update the class name and displayed output in `MeepMoop.java`:
-
-```java
-public class MeepMoop {
-    public static void main(String[] args) {
-        String banner = "Your MeepMoop banner here";
-        System.out.println(banner);
-    }
-}
-```
-
-The filename and public class name must match exactly.
-
-3. Update `README.md`:
-
-- Change `Duke project template` to `MeepMoop project`
-- Change references to the Duke mascot/name
-- Change `src/main/java/Duke.java` to `src/main/java/MeepMoop.java`
-- Change `Run Duke.main()` to `Run MeepMoop.main()`
-
-4. Update `docs/README.md`:
-
-```markdown
-# MeepMoop User Guide
-```
-
-You do not need to change `CONTRIBUTORS.md`.
-
-After renaming, search for remaining references with:
-
-```bash
-rg -n -i "duke" .
-```
-````
-#### User prompt
-
-````text
-go ahead and make the changes
-````
-#### Assistant final response
-
-````text
-Changes completed:
-
-- Renamed `Duke.java` to `MeepMoop.java`
-- Renamed the public class to `MeepMoop`
-- Updated the program output to `MeepMoop`
-- Updated `README.md`
-- Updated `docs/README.md`
-- Confirmed there are no remaining “Duke” references
-
-I couldn’t compile-test it because JDK 25 is still not installed on the Mac.
-````
-#### User prompt
-
-````text
-done
-````
-#### Assistant final response
-
-````text
-Great. Your Mac is now ready to run the MeepMoop Java project with JDK 25.
-````
-#### User prompt
-
-````text
-there's supposed to be an ASCII banner somewhere. can you verify if this is the case?
-````
-#### Assistant final response
-
-````text
-Yes. The original `Duke.java` contained an ASCII banner, and the banner is still present in `README.md`.
-
-However, when I renamed the class, I replaced the source-code banner with plain `MeepMoop` output. Currently, `MeepMoop.java` prints only:
-
-```text
-MeepMoop
-```
-
-So the banner is documented in `README.md` but no longer displayed by the program.
-````
 #### User prompt
 
 ````text
@@ -193,7 +67,7 @@ Compilation and execution both passed successfully with JDK 25, and the banner n
 #### User prompt
 
 ````text
-The requirement given to me:
+The requirement:
 
 [=====
 
@@ -296,13 +170,11 @@ You should clarify whether your assignment requires the simple one-run greeting 
 ````
 ## Suggest chatbot project ideas
 
-- Task ID: `01a05333-d443-7bc3-86c1-f0734f640342`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
 ````text
-I need to build something with actual usability and functionality based off this chatbot format. we are not allowed to make a to-do manager, as that is too standard. give me 10 options of what I could make (e.g. budget manager with chat interface) and rank them based on usability, difficulty of execution, etc.
+Goal: build an application with use cases based off the chatbot format. Do not suggest a to-do manager, as that is too standard. give me 10 options of what I could make (e.g. budget manager with chat interface) and rank them based on usability, difficulty of execution, and other criteria.
 ````
 #### Assistant final response
 
@@ -636,12 +508,12 @@ Implemented the travel itinerary chatbot with fixed-array in-memory storage and 
 
 Key files:
 
-- [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java)
-- [Plan.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Plan.java)
-- [Activity.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Activity.java)
-- [Accommodation.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Accommodation.java)
-- [Transport.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Transport.java)
-- [Itinerary.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Itinerary.java)
+- [MeepMoop.java](file/src/main/java/MeepMoop.java)
+- [Plan.java](file/src/main/java/Plan.java)
+- [Activity.java](file/src/main/java/Activity.java)
+- [Accommodation.java](file/src/main/java/Accommodation.java)
+- [Transport.java](file/src/main/java/Transport.java)
+- [Itinerary.java](file/src/main/java/Itinerary.java)
 
 It supports `activity`, `stay`, `transport`, `list`, `book`, `unbook`, and `exit`, including the planned validation, booking state, 100-item limit, and display formats.
 
@@ -649,8 +521,6 @@ Verified by compiling and running it with Java 25, covering all three plan types
 ````
 ## Create test-ui project skill
 
-- Task ID: `01a05370-6962-7740-a652-9165ed412898`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -668,9 +538,9 @@ Create a project-specific skill named `test-ui`, as follows.
 ````text
 Created the project-specific `test-ui` skill:
 
-- [test-ui/SKILL.md](/Users/xp/Projects/CS3227-2610-MP1/test-ui/SKILL.md)
-- [run_ui_tests.py](/Users/xp/Projects/CS3227-2610-MP1/test-ui/scripts/run_ui_tests.py)
-- [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md)
+- [test-ui/SKILL.md](file/test-ui/SKILL.md)
+- [run_ui_tests.py](file/test-ui/scripts/run_ui_tests.py)
+- [ui-test-plan.md](file/test/ui-test-plan.md)
 
 The runner supports paired commands and expected outputs, exact comparison, complete console transcripts, and immediate termination on failure.
 
@@ -708,35 +578,12 @@ TEST SESSION PASSED
 #### User prompt
 
 ````text
-why does the test session not contain any of the commands which have been implemented so far?
-````
-#### Assistant final response
-
-````text
-Because the test plan currently contains only one test case: “Startup banner.”
-
-It does not yet include inputs for the implemented commands:
-
-- `activity`
-- `stay`
-- `transport`
-- `list`
-- `book`
-- `unbook`
-- `exit`
-- invalid commands and formats
-
-The skill only executes commands listed in `test/ui-test-plan.md`; it does not automatically discover commands from `MeepMoop.java`. The current plan even labels the startup case as a placeholder, so the session only tests compilation and startup/exit behavior.
-````
-#### User prompt
-
-````text
 update the markdown file so that it tests the existing implemented commands
 ````
 #### Assistant final response
 
 ````text
-Updated [test/ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md) to test:
+Updated file to test:
 
 - `activity`
 - `stay`
@@ -782,7 +629,7 @@ Update relevant agent files to ensure that after each code update,
 #### Assistant final response
 
 ````text
-Updated [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md) with the required post-code-update workflow:
+Updated [AGENTS.md](file/AGENTS.md) with the required post-code-update workflow:
 
 1. Review and update `test/ui-test-plan.md` when UI behavior changes.
 2. Invoke `test-ui`, run the tests, and show the complete transcript.
@@ -790,8 +637,6 @@ Updated [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md) with the requi
 ````
 ## Add chatbot exception handling
 
-- Task ID: `01a055ec-fff8-7e93-9df7-4daeb1663ce5`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -800,7 +645,7 @@ Use exceptions to handle errors. For example, define a custom exception class (
 
 For every error, update test-ui skill so that it tests that the error is correctly shown.
 
-Also update agent instructions such that with every change, it checks to see if it needs to add more test cases to cover edge cases and incorrect inputs.\
+Also update agent instructions such that with every change, it checks to see if it needs to add more test cases to cover edge cases and incorrect inputs.
 Interleave positive and negative test cases to detect incorrect inputs affecting the correctness of the internal states.
 ````
 #### Assistant final response
@@ -832,8 +677,6 @@ All three test cases passed, including invalid-input handling and state preserva
 ````
 ## Add item deletion support
 
-- Task ID: `01a055f4-fc22-7853-84fc-1aaa7548b53c`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -858,12 +701,10 @@ Changes:
 - Added validation for malformed and out-of-range numbers.
 - Updated the UI test plan with positive, negative, and state-preservation cases.
 
-All UI tests passed under Java 25. [Itinerary.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Itinerary.java) [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java) [test/ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md)
+All UI tests passed under Java 25. [Itinerary.java](file/src/main/java/Itinerary.java) [MeepMoop.java](file/src/main/java/MeepMoop.java) [test/ui-test-plan.md](file/test/ui-test-plan.md)
 ````
 ## Review code and UI test plan
 
-- Task ID: `01a05603-aabd-7143-a93a-f29cc7f333ea`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -883,7 +724,7 @@ No source files were changed during this review.
 ### Most important findings
 
 1. **The UI test suite currently fails.**  
-   [MeepMoop.java:69](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:69) prints a separator after every caught `MeepException`, but the expected output in [ui-test-plan.md:28](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:28) does not include those separators.
+   [MeepMoop.java:69](file/src/main/java/MeepMoop.java:69) prints a separator after every caught `MeepException`, but the expected output in [ui-test-plan.md:28](file/test/ui-test-plan.md:28) does not include those separators.
 
    Because the runner is fail-fast, it stopped during the first scenario. The other three scenarios were not executed. Based on inspection, scenarios 3 and 4 have the same expected-output mismatch.
 
@@ -891,10 +732,10 @@ No source files were changed during this review.
    The repository contains UI tests only—no `src/test/java`, Maven `pom.xml`, or Gradle build file. Consequently, behavior in `Itinerary`, `Plan`, and individual plan types cannot be tested independently from the console.
 
 3. **Compiled `.class` files are staged inside the source directory.**  
-   Files such as `Activity.class` and `MeepMoop.class` should normally be generated build artifacts rather than committed source. [.gitignore](/Users/xp/Projects/CS3227-2610-MP1/.gitignore:1) excludes `/build` and `/out`, but not `*.class`.
+   Files such as `Activity.class` and `MeepMoop.class` should normally be generated build artifacts rather than committed source. [.gitignore](file/.gitignore:1) excludes `/build` and `/out`, but not `*.class`.
 
 4. **The user guide is still a template.**  
-   [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md:1) contains placeholders and documents unrelated features such as “Adding deadlines.” The implemented command syntax and validation rules therefore lack a proper specification.
+   [docs/README.md](file/docs/README.md:1) contains placeholders and documents unrelated features such as “Adding deadlines.” The implemented command syntax and validation rules therefore lack a proper specification.
 
 ## What the code does well
 
@@ -910,9 +751,9 @@ No source files were changed during this review.
 
 ## Code improvement areas
 
-- [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:18) combines input, parsing, business logic, and presentation in one class. A small `Parser` or command abstraction would make unit testing easier, although this can wait until the application grows.
+- [MeepMoop.java](file/src/main/java/MeepMoop.java:18) combines input, parsing, business logic, and presentation in one class. A small `Parser` or command abstraction would make unit testing easier, although this can wait until the application grows.
 - `updateBooking` and `deletePlan` duplicate item-number parsing. Extracting a helper would keep validation behavior consistent.
-- [Itinerary.add](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Itinerary.java:9) accepts `null`, and `get`/`remove` use `null` as an invalid-index signal. That is manageable in this small program but permits invalid internal state.
+- [Itinerary.add](file/src/main/java/Itinerary.java:9) accepts `null`, and `get`/`remove` use `null` as an invalid-index signal. That is manageable in this small program but permits invalid internal state.
 - The capacity check uses `== MAX_PLANS`; `>= MAX_PLANS` would express the invariant more defensively.
 - Accommodation dates are stored as arbitrary strings. The program accepts a reversed range such as `2026-09-03` to `2026-09-01`. Decide whether dates are merely labels or should be parsed and ordered.
 - The parser accepts extra delimiter text, for example `transport Bus /from A /to B /to C`, treating `B /to C` as the destination. The intended rule should be documented and tested.
@@ -950,7 +791,7 @@ However, it is not sufficiently comprehensive.
 
 Additional plan-quality problems:
 
-- The human-readable section documents only two cases, while the JSON contains four. See [ui-test-plan.md:7](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:7) and [ui-test-plan.md:43](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:43).
+- The human-readable section documents only two cases, while the JSON contains four. See [ui-test-plan.md:7](file/test/ui-test-plan.md:7) and [ui-test-plan.md:43](file/test/ui-test-plan.md:43).
 - The first case is too broad. When it fails, many later behaviors are never tested.
 - The runner does not verify that the descriptive `inputs` field corresponds to the shell command.
 - The runner has no timeout, so a program waiting indefinitely for input could hang the suite.
@@ -1270,7 +1111,7 @@ Completion criteria:
 - The working tree contains no generated binaries.
 - No known issue from the review remains unaddressed.
 
-After every code-changing phase, the required project workflow applies: review and update [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md), consider positive/negative/boundary/malformed cases, and run the project’s `test-ui` skill. If a test fails, stop and report the actual versus expected output rather than changing expectations merely to obtain a pass.
+After every code-changing phase, the required project workflow applies: review and update [ui-test-plan.md](file/test/ui-test-plan.md), consider positive/negative/boundary/malformed cases, and run the project’s `test-ui` skill. If a test fails, stop and report the actual versus expected output rather than changing expectations merely to obtain a pass.
 ````
 #### User prompt
 
@@ -1287,7 +1128,7 @@ Phase 0 is complete.
 - No source or test files were edited.
 - The current implementation output is now authoritative.
 - Baseline UI status: **failed as expected** on the first case.
-- Later phases must add the missing separators to expected output at [ui-test-plan.md:28](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:28), [ui-test-plan.md:50](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:50), and [ui-test-plan.md:61](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:61), rather than remove separators from the implementation.
+- Later phases must add the missing separators to expected output at [ui-test-plan.md:28](file/test/ui-test-plan.md:28), [ui-test-plan.md:50](file/test/ui-test-plan.md:50), and [ui-test-plan.md:61](file/test/ui-test-plan.md:61), rather than remove separators from the implementation.
 - The runner stopped immediately after the failure, so the remaining cases were not run.
 
 The exact mismatch begins here:
@@ -1369,7 +1210,7 @@ proceed with phase 1 (partially). separators should only appear at the very end 
 #### Assistant final response
 
 ````text
-Phase 1 is partially complete. The separator contract is documented in [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md:9):
+Phase 1 is partially complete. The separator contract is documented in [docs/README.md](file/docs/README.md:9):
 
 - Every response ends with exactly one separator.
 - Responses never begin with a separator.
@@ -1391,16 +1232,16 @@ Phase 2 implementation is complete. Build verification passed; UI verification r
 
 Changes made:
 
-- Added a Java 25 Gradle application build in [build.gradle](/Users/xp/Projects/CS3227-2610-MP1/build.gradle:1).
-- Added project configuration in [settings.gradle](/Users/xp/Projects/CS3227-2610-MP1/settings.gradle:1).
+- Added a Java 25 Gradle application build in [build.gradle](file/build.gradle:1).
+- Added project configuration in [settings.gradle](file/settings.gradle:1).
 - Added the Gradle Wrapper: `gradlew`, `gradlew.bat`, and wrapper support files.
-- Pinned Gradle 9.7.1 and its official SHA-256 checksum in [gradle-wrapper.properties](/Users/xp/Projects/CS3227-2610-MP1/gradle/wrapper/gradle-wrapper.properties:1).
+- Pinned Gradle 9.7.1 and its official SHA-256 checksum in [gradle-wrapper.properties](file/gradle/wrapper/gradle-wrapper.properties:1).
 - Configured `-Xlint:all`.
 - Configured `./gradlew run` to accept console input.
-- Added `*.class` to [.gitignore](/Users/xp/Projects/CS3227-2610-MP1/.gitignore:6).
+- Added `*.class` to [.gitignore](file/.gitignore:6).
 - Removed all generated `.class` files from `src/main/java`.
-- Updated [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md:5) with wrapper-based build and run instructions.
-- Updated all executable commands in [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:27) to run classes from `build/classes/java/main`.
+- Updated [README.md](file/README.md:5) with wrapper-based build and run instructions.
+- Updated all executable commands in [ui-test-plan.md](file/test/ui-test-plan.md:27) to run classes from `build/classes/java/main`.
 
 Gradle 9.7.1 was selected from the [official releases](https://gradle.org/releases/); Gradle’s [compatibility matrix](https://docs.gradle.org/current/userguide/compatibility.html) confirms support for running on Java 25.
 
@@ -1495,12 +1336,12 @@ Changes:
 - Added human-readable descriptions matching every executable case.
 - Added state-integrity checks after invalid commands.
 - Added the capacity boundary: items 1–100 succeed, item 101 is rejected, and the final list remains unchanged.
-- Updated the documented contract in [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md:17).
+- Updated the documented contract in [docs/README.md](file/docs/README.md:17).
 
 Relevant files:
 
-- [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:115)
-- [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:1)
+- [MeepMoop.java](file/src/main/java/MeepMoop.java:115)
+- [ui-test-plan.md](file/test/ui-test-plan.md:1)
 
 Verification:
 
@@ -1516,40 +1357,12 @@ Reject an item beyond itinerary capacity ...... PASSED
 TEST SESSION PASSED
 ```
 
-The runner emitted the complete console transcript, including all 100 successful capacity additions, the rejected 101st item, and the final 100-item list. Its exact expected counterpart is stored in the executable block of [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:67). `git diff --check` also passes. No commit or push was performed.
+The runner emitted the complete console transcript, including all 100 successful capacity additions, the rejected 101st item, and the final 100-item list. Its exact expected counterpart is stored in the executable block of [ui-test-plan.md](file/test/ui-test-plan.md:67). `git diff --check` also passes. No commit or push was performed.
 ````
 #### User prompt
 
 ````text
-Is it safe to skip phases 4/5 and go straight to 6? if yes, proceed with phase 6
-````
-#### Assistant final response
-
-````text
-It is not safe to skip both phases.
-
-Phase 5 can mostly be deferred because its domain-model changes are not strict prerequisites for parsing. Phase 4 should come first: Phase 6 restructures parsing and adds many malformed-input rules, so unit tests are needed to distinguish intended validation changes from refactoring regressions. UI tests alone provide slow, coarse feedback.
-
-Phase 6 also remains blocked by unresolved Phase 1 decisions:
-
-- Are accommodation dates validated as real dates?
-- Must the start date be on or before the end date?
-- Can `/from` or `/to` appear inside descriptions or locations?
-- Should repeated delimiters be rejected?
-
-Recommended path:
-
-1. Implement a minimal Phase 4 covering current model and parsing behavior.
-2. Finish these Phase 1 decisions.
-3. Proceed with Phase 6.
-4. Return to the remaining Phase 5 hardening afterward.
-
-I have not changed the repository because your instruction to proceed was conditional on skipping being safe.
-````
-#### User prompt
-
-````text
-In that case, proceed with the full phase 4.&#x20;
+Proceed with the full phase 4.
 
 
 
@@ -1577,7 +1390,7 @@ Phase 4 is complete. Both JUnit and UI suites pass.
 
 ### Added test infrastructure
 
-[build.gradle](/Users/xp/Projects/CS3227-2610-MP1/build.gradle:1) now uses JUnit Jupiter 6.1.3 with:
+[build.gradle](file/build.gradle:1) now uses JUnit Jupiter 6.1.3 with:
 
 - JUnit BOM dependency alignment
 - `junit-jupiter`
@@ -1590,12 +1403,12 @@ This follows the [official JUnit Gradle configuration](https://docs.junit.org/6.
 
 Six conventionally located test classes were added under `src/test/java`:
 
-- [ItineraryTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/ItineraryTest.java:1)
-- [PlanTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/PlanTest.java:1)
-- [ActivityTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/ActivityTest.java:1)
-- [AccommodationTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/AccommodationTest.java:1)
-- [TransportTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/TransportTest.java:1)
-- [MeepExceptionTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/MeepExceptionTest.java:1)
+- [ItineraryTest.java](file/src/test/java/ItineraryTest.java:1)
+- [PlanTest.java](file/src/test/java/PlanTest.java:1)
+- [ActivityTest.java](file/src/test/java/ActivityTest.java:1)
+- [AccommodationTest.java](file/src/test/java/AccommodationTest.java:1)
+- [TransportTest.java](file/src/test/java/TransportTest.java:1)
+- [MeepExceptionTest.java](file/src/test/java/MeepExceptionTest.java:1)
 
 Coverage includes:
 
@@ -1611,8 +1424,8 @@ Parameterized tests expand the 19 declared methods into **25 executed tests**. `
 
 ### Documentation
 
-- [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md:27) now requires affected JUnit tests to be reviewed, updated, and run after every code change.
-- [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md:21) documents `./gradlew test` and the generated HTML report.
+- [AGENTS.md](file/AGENTS.md:27) now requires affected JUnit tests to be reviewed, updated, and run after every code change.
+- [README.md](file/README.md:21) documents `./gradlew test` and the generated HTML report.
 
 ### Verification
 
@@ -1643,114 +1456,13 @@ TEST SESSION PASSED
 No commit or push was performed.
 ````
 #### User prompt
-
-````text
-explain phase 5 to me. in what circumstances would we encounter null plans?
-````
-#### Assistant final response
-
-````text
-Phase 5 strengthens the domain model so invalid internal state cannot exist and method results are less ambiguous. It is primarily defensive work rather than a fix for a current CLI failure.
-
-## How could a null plan occur?
-
-Currently, no valid or invalid console command creates a null plan. `MeepMoop` constructs an `Activity`, `Accommodation`, or `Transport` before calling `Itinerary.add`.
-
-However, `Itinerary.add` is public and currently accepts this:
-
-```java
-Itinerary itinerary = new Itinerary();
-itinerary.add(null);
-```
-
-That could happen later through:
-
-- A parser or factory that returns `null` for invalid input
-- A programming mistake in another class
-- Loading malformed or incomplete saved data
-- A future import or integration feature
-- Incorrect test setup
-- Code using `Itinerary` independently of `MeepMoop`
-
-The immediate risk is low today, but the resulting behavior is confusing.
-
-### Listing a null plan
-
-String concatenation would display it as:
-
-```text
-1. null
-```
-
-### Booking a null plan
-
-A valid index could return null, and this call would crash:
-
-```java
-plan.isBooked()
-```
-
-That produces a `NullPointerException`.
-
-### Removing a null plan
-
-This is more subtle:
-
-```java
-Plan removedPlan = itinerary.remove(1);
-```
-
-The null entry would actually be removed, but `remove` would return null. `MeepMoop` would interpret that as an invalid item number and show an error even though the itinerary changed.
-
-That violates an important rule: rejected operations should not silently alter state.
-
-## Why current null returns are ambiguous
-
-Currently, `Itinerary.get` returns null for an invalid item number:
-
-```java
-Plan plan = itinerary.get(999); // null
-```
-
-If null entries are allowed, this is indistinguishable from retrieving a valid position containing null:
-
-```java
-itinerary.add(null);
-Plan plan = itinerary.get(1); // also null
-```
-
-Rejecting null in `add` restores a useful guarantee:
-
-> A null result from `get` or `remove` always means the item number was invalid.
-
-The simplest Phase 5 solution is:
-
-```java
-Objects.requireNonNull(plan, "plan must not be null");
-```
-
-This should be accompanied by a JUnit test using `assertThrows`.
-
-## Other Phase 5 improvements
-
-Phase 5 would also address:
-
-- Use `plans.size() >= MAX_PLANS` instead of `==` to express the capacity invariant defensively.
-- Decide whether `get` and `remove` should retain documented nullable results or use a clearer alternative such as `Optional<Plan>`.
-- Centralize item-count formatting so the UI says `1 item` and `2 items`.
-- Add tests for every changed invariant and update affected UI expectations.
-
-For this introductory project, I recommend rejecting null in `add` while retaining the existing null result for invalid indices. It is simple, keeps the API familiar, and removes the ambiguity without introducing `Optional` throughout the application.
-````
-#### User prompt
-
 ````text
 go ahead and implement the rejection of null
 ````
 #### Assistant final response
 
 ````text
-Null plans are now rejected immediately in [Itinerary.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Itinerary.java:10):
+Null plans are now rejected immediately in [Itinerary.java](file/src/main/java/Itinerary.java:10):
 
 ```java
 Objects.requireNonNull(plan, "plan must not be null");
@@ -1758,7 +1470,7 @@ Objects.requireNonNull(plan, "plan must not be null");
 
 This occurs before the capacity check, ensuring null is always treated as a programming error—even when the itinerary is full.
 
-A negative test was added to [ItineraryTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/ItineraryTest.java:33). It verifies:
+A negative test was added to [ItineraryTest.java](file/src/test/java/ItineraryTest.java:33). It verifies:
 
 - `add(null)` throws `NullPointerException`.
 - The exception has a clear message.
@@ -1774,56 +1486,8 @@ Verification:
 No commit or push was performed.
 ````
 #### User prompt
-
 ````text
-Is there anything you need to clarify with me before you can implement phase 6?
-````
-#### Assistant final response
-
-````text
-Yes—two behavior decisions materially affect Phase 6.
-
-1. Accommodation dates
-
-   Recommended: require ISO `YYYY-MM-DD` dates, require real calendar dates, and require `/from` to be on or before `/to`.
-
-   Examples to reject:
-
-   ```text
-   stay Hotel /from tomorrow /to Friday
-   stay Hotel /from 2026-02-30 /to 2026-03-02
-   stay Hotel /from 2026-09-03 /to 2026-09-01
-   ```
-
-2. `/from` and `/to` delimiters
-
-   Recommended: treat them as reserved markers that must each appear exactly once, in that order, with nonempty text on every side. They would not be allowed inside names or locations.
-
-   Examples to reject:
-
-   ```text
-   transport Bus /to Tokyo /from Singapore
-   transport Bus /from Singapore /to Tokyo /to Osaka
-   stay /from 2026-09-01 /to 2026-09-03
-   ```
-
-Unless you disagree, I would also use these defaults:
-
-- Commands and markers remain case-insensitive using `Locale.ROOT`.
-- Leading, trailing, and repeated separating whitespace is accepted.
-- Internal text spacing is preserved after trimming.
-- Invalid item numbers—including missing, negative, zero, nonnumeric, overflow, and out-of-range values—continue to show `Invalid item number`.
-- Malformed stay syntax keeps the existing format error; invalid or reversed dates receive a more specific date error.
-- Parser logic moves into a dedicated `Parser` class with `ParserTest`; `MeepMoop` retains command execution and output.
-
-I need your decision on the date and delimiter policies before implementing Phase 6.
-````
-#### User prompt
-
-````text
-agred with 1.
-agreed with 2
-agreed with the others.
+proceed
 ````
 #### Assistant final response
 
@@ -1832,7 +1496,7 @@ Phase 6 is complete.
 
 ### Implementation
 
-Added [Parser.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Parser.java:1), which now owns:
+Added [Parser.java](file/src/main/java/Parser.java:1), which now owns:
 
 - Command recognition using `Locale.ROOT`
 - Leading, trailing, and repeated separating whitespace handling
@@ -1845,11 +1509,11 @@ Added [Parser.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Parser.java
 - Missing, zero, negative, nonnumeric, and overflow rejection
 - Validation of argumentless `list` and `exit`
 
-[MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:1) now consumes validated parsed commands and focuses on execution and console output. Duplicated number and route parsing was removed.
+[MeepMoop.java](file/src/main/java/MeepMoop.java:1) now consumes validated parsed commands and focuses on execution and console output. Duplicated number and route parsing was removed.
 
 ### Tests
 
-Added [ParserTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/ParserTest.java:1) with 46 executed cases covering positive, negative, malformed, and boundary behavior.
+Added [ParserTest.java](file/src/test/java/ParserTest.java:1) with 46 executed cases covering positive, negative, malformed, and boundary behavior.
 
 JUnit result:
 
@@ -1878,19 +1542,17 @@ UI result:
 TEST SESSION PASSED
 ```
 
-The complete expected transcripts are in [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md:1).
+The complete expected transcripts are in [ui-test-plan.md](file/test/ui-test-plan.md:1).
 
-The agreed parsing contract is documented in [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md:1). `git diff --check` also passes. No commit or push was performed.
+The agreed parsing contract is documented in [docs/README.md](file/docs/README.md:1). `git diff --check` also passes. No commit or push was performed.
 ````
 ## Find enum conversion candidates
 
-- Task ID: `01a0564c-ebb4-7d52-9e71-35a86ea5872e`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
 ````text
-See if there are any variables that can be represented as enums in the code (which haven't yet been)
+See if there are any variables that can be represented as enums in the code
 ````
 #### Assistant final response
 
@@ -1901,9 +1563,9 @@ There is one worthwhile enum candidate, plus one optional one.
 
 The plan label and display marker are currently unrestricted strings:
 
-- [`MeepMoop.java:69`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:69): `"activity"`, `"accommodation"`, `"transport"`
-- [`MeepMoop.java:85`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:85): `String planType`
-- [`Plan.java:27`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Plan.java:27): `String typeMarker`
+- [`MeepMoop.java:69`](file/src/main/java/MeepMoop.java:69): `"activity"`, `"accommodation"`, `"transport"`
+- [`MeepMoop.java:85`](file/src/main/java/MeepMoop.java:85): `String planType`
+- [`Plan.java:27`](file/src/main/java/Plan.java:27): `String typeMarker`
 - Subclasses pass `"A"`, `"S"`, and `"T"`.
 
 These represent the same fixed concept and could be consolidated:
@@ -1923,7 +1585,7 @@ Each `Plan` could expose its `PlanType`, preventing mismatches such as an `Activ
 
 2. `BookingAction` — possible, but not necessary
 
-[`MeepMoop.java:107`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java:107) uses `boolean shouldBook`. An enum such as `BOOK`/`UNBOOK` would make calls more descriptive, but a boolean is reasonable because this is genuinely binary. The stored `booked` field should also remain a boolean.
+[`MeepMoop.java:107`](file/src/main/java/MeepMoop.java:107) uses `boolean shouldBook`. An enum such as `BOOK`/`UNBOOK` would make calls more descriptive, but a boolean is reasonable because this is genuinely binary. The stored `booked` field should also remain a boolean.
 
 The other strings are not good enum candidates:
 
@@ -1946,11 +1608,11 @@ Introduced `PlanType` with `ACTIVITY`, `ACCOMMODATION`, and `TRANSPORT`.
 
 Key changes:
 
-- Added [`PlanType.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/PlanType.java) containing display names and markers.
-- [`Plan.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Plan.java) now stores and exposes its type.
+- Added [`PlanType.java`](file/src/main/java/PlanType.java) containing display names and markers.
+- [`Plan.java`](file/src/main/java/Plan.java) now stores and exposes its type.
 - Concrete plan classes assign their correct enum value.
 - `MeepMoop` derives confirmation labels from the enum instead of accepting arbitrary strings.
-- Added and updated JUnit coverage, including [`PlanTypeTest.java`](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/PlanTypeTest.java).
+- Added and updated JUnit coverage, including [`PlanTypeTest.java`](file/src/test/java/PlanTypeTest.java).
 
 Verification:
 
@@ -1963,8 +1625,6 @@ The referenced `test-ui` skill was unavailable, so I executed its JSON test plan
 ````
 ## Add persistent task storage
 
-- Task ID: `01a0568b-61f5-7121-a8e6-ea319be24efe`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2063,13 +1723,13 @@ Implemented automatic itinerary persistence.
 
 Key changes:
 
-- Added [Storage.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Storage.java) with atomic saves, UTF-8/Base64 records, missing-directory creation, and corrupted-record recovery.
-- Updated [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java) to load at startup and save after every successful mutation.
+- Added [Storage.java](file/src/main/java/Storage.java) with atomic saves, UTF-8/Base64 records, missing-directory creation, and corrupted-record recovery.
+- Updated [MeepMoop.java](file/src/main/java/MeepMoop.java) to load at startup and save after every successful mutation.
 - Failed saves now roll back add, book/unbook, and delete operations.
 - Added serialization getters and rollback support to the model.
 - Ignored personal `data/meepmoop.txt` without disturbing existing `.gitignore` entries.
 - Added extensive storage and rollback JUnit tests.
-- Expanded the [UI test plan](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md) to 13 isolated scenarios. The UI runner now backs up and restores personal data.
+- Expanded the [UI test plan](file/test/ui-test-plan.md) to 13 isolated scenarios. The UI runner now backs up and restores personal data.
 
 Validation:
 
@@ -2082,13 +1742,11 @@ Validation:
 ````
 ## Add date-time parsing and view
 
-- Task ID: `01a056aa-16f9-7870-9d7b-54b6997d3e34`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
 ````text
-Teach the chatbot how to understand dates and times. For example, if the command is `deadline return book /by 2/12/2019 1800`, the chatbot should understand `2/12/2019 1800` as *2nd of December 2019, 6pm*, instead of treating it as just a String.
+Implement the ability to parse dates and times. For example, if the command is `deadline return book /by 2/12/2019 1800`, the chatbot should understand `2/12/2019 1800` as *2nd of December 2019, 6pm*, instead of treating it as just a String.
 
 - **Minimal**: Store deadline/event dates as a `java.time.LocalDate` (or `java.time.LocalDateTime`) in your task objects. Accept dates in a format such as `yyyy-mm-dd` (e.g., `2019-10-15`) and print in a different format such as `MMM dd yyyy` (e.g., `Oct 15 2019`).
 
@@ -2127,7 +1785,7 @@ public class Main {
 
 For this task, I want the user input to be in YYYY-MM-DD HHmm (e.g. 2019-10-14 1800), which is the current implementation. I want the display to be in human readable text (15 Oct 2019 6pm).
 
-furthermore, add a "view" command which is used with a date (no time - If user provides a datetime, Ignore the time and just use the date Information). view 2019-10-14 returns all items that occur on that date. for example, a stay that begins on 10-10 and ends 10-17 should be returned. so should an activity happening on the day itself. Remember to handle errors for this input also.  
+furthermore, add a "view" command which is used with a date (no time - If user provides a datetime, Ignore the time and just use the date Information). view 2019-10-14 returns all items that occur on that date. for example, a stay that begins on 10-10 and ends 10-17 should be returned. so should an activity happening on the day itself. 
 ```
 ````
 #### Assistant final response
@@ -2141,7 +1799,7 @@ Implemented date/time support and `view`.
 - Strict validation covers invalid dates/times and malformed `view` commands.
 - Existing undated `activity <description>` commands remain supported.
 
-Updated implementation, tests, docs, and UI plan: [Parser.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Parser.java), [Activity.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Activity.java), [Accommodation.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Accommodation.java), [test/ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md).
+Updated implementation, tests, docs, and UI plan: [Parser.java](file/src/main/java/Parser.java), [Activity.java](file/src/main/java/Activity.java), [Accommodation.java](file/src/main/java/Accommodation.java), [test/ui-test-plan.md](file/test/ui-test-plan.md).
 
 Verified with Java 25:
 
@@ -2150,8 +1808,6 @@ Verified with Java 25:
 ````
 ## Extract first task class
 
-- Task ID: `01a056ba-3f2e-7af0-9e63-f29ecf636745`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2230,9 +1886,9 @@ yes
 ````text
 First increment complete and committed: `fe38195 Extract console output into Ui`.
 
-- Added [Ui.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Ui.java), which now owns all console messages and formatting.
-- Updated [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java) to delegate output to `Ui`.
-- Added exact-output coverage in [UiTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/UiTest.java).
+- Added [Ui.java](file/src/main/java/Ui.java), which now owns all console messages and formatting.
+- Updated [MeepMoop.java](file/src/main/java/MeepMoop.java) to delegate output to `Ui`.
+- Added exact-output coverage in [UiTest.java](file/src/test/java/UiTest.java).
 - `./gradlew test` passed: 99 tests.
 - The complete `test-ui` transcript passed all documented UI cases.
 - Working tree is clean.
@@ -2257,32 +1913,6 @@ Verification passed:
 - Full `test-ui` plan, including exact console-output checks
 
 The target’s minimal extraction is now met (`Ui`, `Storage`, `Parser`, and itinerary-as-task-list responsibilities are separate), so there are no further necessary increments.
-````
-#### User prompt
-
-````text
-do I have the equivalent as a TaskList class?
-````
-#### Assistant final response
-
-````text
-Yes. [`Itinerary`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Itinerary.java) is your `TaskList` equivalent.
-
-It owns the in-memory collection and provides list operations such as `add`, `get`, `remove`, `getCount`, and `getPlansOn`. The name fits your app better because it stores travel plans rather than generic tasks.
-````
-#### User prompt
-
-````text
-where does the itinerary's list\<plan> get written to file and saved more permanently
-````
-#### Assistant final response
-
-````text
-The [`Storage.save(Itinerary)`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Storage.java:63) method writes the `Itinerary`’s `List<Plan>` to disk.
-
-It loops through each plan using `getCount()` and `get(...)`, converts it to a file record, then saves the complete snapshot to `data/meepmoop.txt`. It writes to a temporary file first and then replaces the real file, helping prevent partial saves.
-
-[`MeepMoop`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/MeepMoop.java) calls this after adding, booking/unbooking, or deleting a plan. On startup, [`Storage.load()`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Storage.java:34) reconstructs the `Itinerary` from that same file.
 ````
 #### User prompt
 
@@ -2343,9 +1973,9 @@ First stretch-goal increment committed: `afca9e0 Introduce list and exit command
 
 Added:
 
-- [`Command.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/Command.java): shared command contract
-- [`ListCommand.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/ListCommand.java)
-- [`ExitCommand.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/ExitCommand.java)
+- [`Command.java`](file/src/main/java/Command.java): shared command contract
+- [`ListCommand.java`](file/src/main/java/ListCommand.java)
+- [`ExitCommand.java`](file/src/main/java/ExitCommand.java)
 
 `MeepMoop` now delegates `list` and `exit` via the command abstraction. Added focused command tests; all JUnit tests and the complete UI test plan pass.
 
@@ -2361,7 +1991,7 @@ go ahead
 ````text
 Committed `f0ef19a Extract date-filtered view command`.
 
-[`ViewCommand.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/ViewCommand.java) now stores the parsed date and displays matching plans through `Ui`. The command loop delegates `view` through the shared `Command` mechanism.
+[`ViewCommand.java`](file/src/main/java/ViewCommand.java) now stores the parsed date and displays matching plans through `Ui`. The command loop delegates `view` through the shared `Command` mechanism.
 
 All JUnit tests and the complete UI test plan pass.
 
@@ -2370,14 +2000,14 @@ Next increment: extract `DeleteCommand`. It is the smallest remaining state-chan
 #### User prompt
 
 ````text
-Implement it
+Implement
 ````
 #### Assistant final response
 
 ````text
 Committed `d60317c Extract delete command with rollback`.
 
-[`DeleteCommand.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/DeleteCommand.java) now owns deletion, saving, failure reporting, and restoration at the original list position if saving fails.
+[`DeleteCommand.java`](file/src/main/java/DeleteCommand.java) now owns deletion, saving, failure reporting, and restoration at the original list position if saving fails.
 
 All JUnit tests and the full UI test plan pass.
 
@@ -2393,7 +2023,7 @@ go ahead
 ````text
 Committed `f62cfb1 Extract shared booking command`.
 
-[`BookingCommand.java`](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/BookingCommand.java) now handles both `book` and `unbook`, including duplicate-state validation, saving, and rollback if saving fails.
+[`BookingCommand.java`](file/src/main/java/BookingCommand.java) now handles both `book` and `unbook`, including duplicate-state validation, saving, and rollback if saving fails.
 
 All JUnit tests and UI scenarios pass.
 
@@ -2532,8 +2162,6 @@ No further package-organization increment is needed.
 ````
 ## Add seedu Java coding skill
 
-- Task ID: `01a05795-5ff1-7970-8f73-703376d8ed5f`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2546,9 +2174,9 @@ Show me the changes using the /present-changes-visually skill.
 #### Assistant final response
 
 ````text
-Created and mandated the project-local [SE-EDU Java coding standard skill](/Users/xp/Projects/CS3227-2610-MP1/.codex/skills/seedu-java-coding-standard/SKILL.md), based on the [SE-EDU intermediate guide](https://se-education.org/guides/conventions/java/intermediate.html).
+Created and mandated the project-local [SE-EDU Java coding standard skill](file/.codex/skills/seedu-java-coding-standard/SKILL.md), based on the [SE-EDU intermediate guide](https://se-education.org/guides/conventions/java/intermediate.html).
 
-Updated [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md) so every Java change and review must use it. Standardized Java imports across production and tests, and renamed the boolean setter parameter to `isBooked` in [Plan.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/model/Plan.java:33).
+Updated [AGENTS.md](file/AGENTS.md) so every Java change and review must use it. Standardized Java imports across production and tests, and renamed the boolean setter parameter to `isBooked` in [Plan.java](file/src/main/java/meepmoop/model/Plan.java:33).
 
 Validation passed:
 
@@ -2568,9 +2196,9 @@ Update your agent files to mandate following this for all future commits.
 #### Assistant final response
 
 ````text
-Created [seedu-git-standard](/Users/xp/Projects/CS3227-2610-MP1/.codex/skills/seedu-git-standard/SKILL.md), based on the [SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html).
+Created [seedu-git-standard](file/.codex/skills/seedu-git-standard/SKILL.md), based on the [SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html).
 
-Updated [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md) to require this skill before every future commit. It covers commit-message subjects and bodies, branch names, and staged-diff review—without authorizing commits or pushes.
+Updated [AGENTS.md](file/AGENTS.md) to require this skill before every future commit. It covers commit-message subjects and bodies, branch names, and staged-diff review—without authorizing commits or pushes.
 
 Validated the skill’s YAML frontmatter and checked the diff for whitespace errors. No tests were needed because this only changes project guidance.
 ````
@@ -2609,46 +2237,7 @@ The separate `AGENTS.md` and `.codex/` skill changes remain uncommitted.
 ````
 ## Add keyword task search
 
-- Task ID: `01a057ad-55a4-77b0-8202-d4bccc433cb2`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
-#### User prompt
-
-````text
-Give users a way to find a task by searching for a keyword in the task description.
-
-
-
-Example (using a task manager chatbot, not our exact application):
-```less
-find book
-    ____________________________________________________________
-     Here are the matching tasks in your list:
-     1.[T][X] read book
-     2.[D][X] return book (by: June 6th)
-    ____________________________________________________________
-```
-
-
-
-Before implementation, clarify edge cases with me. I believe I might have an existing command that does something similar, verify if this is true.&#x20;
-
-Once you are given the go ahead, complete the increment entirely, including committing, tagging, and pushing.
-````
-#### Assistant final response
-
-````text
-I verified the related existing feature: `view YYYY-MM-DD` filters itinerary items by date (including stays spanning that date). It does not search task descriptions, so a separate `find` command is warranted.
-
-Before I implement, please clarify:
-
-1. Should `find` be case-insensitive substring matching? For example, should `find book` match both “Read Book” and “book flight”?
-2. Should multiple words be treated as one phrase (`find flight tokyo` matches only descriptions containing that whole phrase), or as separate keywords?
-3. When there are no matches, what exact message should appear?
-4. Should results retain the original itinerary numbers (so users can immediately `book`/`delete` them), or be renumbered starting at 1 like your example?
-
-Once you confirm, I’ll implement and fully verify it, then commit, tag, and push as requested.
-````
 #### User prompt
 
 ````text
@@ -2677,8 +2266,6 @@ Your pre-existing `AGENTS.md` modification and `.codex/` directory remain uncomm
 ````
 ## Set up Checkstyle configuration
 
-- Task ID: `01a05af4-d71f-7d03-a704-f02360d51dc9`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2693,10 +2280,10 @@ Run Checkstyle and fix any violations found. Also explain the fixes you did, for
 ````text
 Set up Checkstyle successfully.
 
-- Added the Checkstyle Gradle plugin (version 11.0.0) in [build.gradle](/Users/xp/Projects/CS3227-2610-MP1/build.gradle).
+- Added the Checkstyle Gradle plugin (version 11.0.0) in [build.gradle](file/build.gradle).
 - Added the official SE-EDU configuration files:
-  - [checkstyle.xml](/Users/xp/Projects/CS3227-2610-MP1/config/checkstyle/checkstyle.xml)
-  - [suppressions.xml](/Users/xp/Projects/CS3227-2610-MP1/config/checkstyle/suppressions.xml)
+  - [checkstyle.xml](file/config/checkstyle/checkstyle.xml)
+  - [suppressions.xml](file/config/checkstyle/suppressions.xml)
 
 Fixed all 70 reported violations:
 
@@ -2735,78 +2322,10 @@ Committed and pushed successfully.
 
 Left unrelated local changes uncommitted: `AGENTS.md` and `.codex/`.
 ````
-#### User prompt
-
-````text
-what are the uncommitted changes? review and see if they should be committed and pushed
-````
-#### Assistant final response
-
-````text
-Yes—these should be committed and pushed together.
-
-They add repository-level guidance, not personal machine settings:
-
-- [AGENTS.md](/Users/xp/Projects/CS3227-2610-MP1/AGENTS.md) now requires the project’s Java and Git conventions.
-- [seedu-java-coding-standard](/Users/xp/Projects/CS3227-2610-MP1/.codex/skills/seedu-java-coding-standard/SKILL.md) defines the required Java style checks.
-- [seedu-git-standard](/Users/xp/Projects/CS3227-2610-MP1/.codex/skills/seedu-git-standard/SKILL.md) defines commit/branch conventions.
-- The small YAML file provides skill UI metadata.
-
-They are internally consistent: `AGENTS.md` references the exact committed skill paths. I recommend one documentation/configuration commit, e.g. `Add project coding and Git guidance`, then push it.
-````
-#### User prompt
-
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed.
-
-- Commit: `5c688d0 Add project coding and Git guidance`
-- Pushed to `origin/master`
-- Working tree is clean.
 ````
 ## Add JavaFX chatbot GUI
 
-- Task ID: `01a05aff-48df-75d3-9a34-dc1b83b53a1e`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
-#### User prompt
-
-````text
-Add a GUI to the chatbot, using JavaFX.
-See the JavaFX tutorial given at [https://se-education.org/guides/tutorials/javaFxPart1.html](https://se-education.org/guides/tutorials/javaFxPart1.html)
-**Common mistake**: Forgetting to add a separate `Launcher` class (as explained in the JavaFX tutorial Part 1) when adding the GUI to your project.
-**Minimal requirement:** The GUI should be fit-for-purpose, i.e., users should be able to use the chatbot via the GUI.
-Use your 'computer use' plugin to test the basic functionality of the chatbot GUI. Let me know if I need to enable/configure anything to help with that.
-````
-#### Assistant final response
-
-````text
-Implemented the JavaFX chatbot GUI.
-
-- Added [Launcher.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/Launcher.java) as the separate JavaFX entry point, per the [tutorial](https://se-education.org/guides/tutorials/javaFxPart1.html).
-- Added [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MainWindow.java): chat transcript, command input, Send button, and exit handling.
-- Updated [build.gradle](/Users/xp/Projects/CS3227-2610-MP1/build.gradle) with JavaFX dependencies and native-library selection for Windows, macOS (including Apple Silicon), and Linux.
-- Updated [MeepMoop.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MeepMoop.java) so the GUI can reuse the existing command logic.
-- Updated the usage documentation in [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md) and [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md).
-
-Run it with:
-
-```bash
-./gradlew --quiet run
-```
-
-Verification passed:
-
-- `./gradlew --quiet checkstyleMain checkstyleTest test`
-- Full command-line UI test plan (`TEST SESSION PASSED`)
-- JavaFX window successfully launched on this Apple Silicon Mac.
-
-I couldn’t click through the native GUI because a Computer Use plugin is not available in this session. You don’t need anything extra to run the app; to let me perform interactive GUI clicks in a later task, enable/connect Codex Computer Use under Settings → Computer use.
-````
 #### User prompt
 
 ````text
@@ -2815,7 +2334,7 @@ modify the gui so that every time a message is sent (either by user or the chatb
 #### Assistant final response
 
 ````text
-Added auto-scroll to [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MainWindow.java): every user message and chatbot reply now scrolls the conversation to the bottom after layout, keeping the newest message visible.
+Added auto-scroll to [MainWindow.java](file/src/main/java/meepmoop/MainWindow.java): every user message and chatbot reply now scrolls the conversation to the bottom after layout, keeping the newest message visible.
 
 Verified with:
 
@@ -2860,22 +2379,9 @@ Validation passed:
 - `./gradlew --quiet checkstyleMain checkstyleTest test`
 - Full command-line UI regression plan: passed.
 ````
-#### User prompt
-
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed to `origin/master`.
-
-Commit: `7b954fb Assertions: Document persistence invariants`
 ````
 ## Polish GUI with Split Panels
 
-- Task ID: `01a05b17-9101-70a3-89a0-2c5a879baebf`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2915,28 +2421,14 @@ exit currently just freezes the chat box. it should also close the application a
 ````text
 Fixed: entering `exit` in the GUI now closes the window and shuts down JavaFX instead of freezing the chat input.
 
-Changed [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MainWindow.java:159).
+Changed [MainWindow.java](file/src/main/java/meepmoop/MainWindow.java:159).
 
 Verified with `./gradlew checkstyleMain checkstyleTest test` and the full UI test plan; both pass.
 ````
-#### User prompt
 
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed successfully.
-
-`dd1c25b GUI: Polish interface and close on exit`
-
-Pushed to `origin/master`.
 ````
 ## Add comprehensive JUnit tests
 
-- Task ID: `01a05b29-7dc5-70f1-a6cb-3f66b9c4eb93`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -2993,7 +2485,7 @@ Implement
 #### Assistant final response
 
 ````text
-Implemented batch 1 in [CommandTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/meepmoop/command/CommandTest.java).
+Implemented batch 1 in [CommandTest.java](file/src/test/java/meepmoop/command/CommandTest.java).
 
 Added 8 tests covering:
 
@@ -3025,14 +2517,14 @@ The second test batch uncovered two production defects, so I stopped as required
 
 1. Duplicate `/at` markers are accepted instead of rejected.
 
-- Test: [ParserTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/meepmoop/parser/ParserTest.java:126)
+- Test: [ParserTest.java](file/src/test/java/meepmoop/parser/ParserTest.java:126)
 - Input: `activity Museum /at 2026-09-01 1800 /at 2026-09-02 1800`
 - Expected: `Invalid activity format...`
 - Actual: command parses successfully.
 
 2. A corrupted dated-activity record crashes loading instead of being skipped with a corruption warning.
 
-- Test: [StorageTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/meepmoop/storage/StorageTest.java:156)
+- Test: [StorageTest.java](file/src/test/java/meepmoop/storage/StorageTest.java:156)
 - Record timestamp: `not-a-date-time`
 - Expected: keep the valid legacy record and set `hasCorruptedRecords` to `true`.
 - Actual: `DateTimeParseException` escapes from `Storage.load()`.
@@ -3051,9 +2543,9 @@ fix these two defects
 ````text
 Fixed both defects.
 
-- Duplicate activity `/at` markers now return the documented format error: [Parser.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/parser/Parser.java).
-- Malformed saved activity timestamps are now skipped as corrupted records instead of crashing startup: [Storage.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/storage/Storage.java).
-- Added the duplicate-marker scenario to [test/ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md).
+- Duplicate activity `/at` markers now return the documented format error: [Parser.java](file/src/main/java/meepmoop/parser/Parser.java).
+- Malformed saved activity timestamps are now skipped as corrupted records instead of crashing startup: [Storage.java](file/src/main/java/meepmoop/storage/Storage.java).
+- Added the duplicate-marker scenario to [test/ui-test-plan.md](file/test/ui-test-plan.md).
 
 Verification passed:
 
@@ -3088,24 +2580,9 @@ Verification passed:
 
 Remaining coverage is primarily JavaFX GUI behavior, best checked manually: resize/minimum dimensions, Enter versus Send, invalid-response styling, sidebar refresh, and exit behavior across macOS/Windows/Linux, common resolutions, and English/Chinese system locales. Approve if you’d like me to expand the manual test plan for those checks.
 ````
-#### User prompt
-
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed successfully.
-
-- Commit: `80ac2e9 Expand automated test coverage`
-- Remote: `origin/master`
-- Working tree is clean.
 ````
 ## Add collapsible command panel
 
-- Task ID: `01a05b3d-d3f5-7ef1-a7ab-fb0efcca24d0`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3123,7 +2600,7 @@ Implemented the collapsible command-reference sidebar.
 - Adjusted window sizing for the three-panel layout.
 - Documented the GUI check in the UI test plan.
 
-Changed: [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MainWindow.java), [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md)
+Changed: [MainWindow.java](file/src/main/java/meepmoop/MainWindow.java), [ui-test-plan.md](file/test/ui-test-plan.md)
 
 Verified successfully with `./gradlew checkstyleMain checkstyleTest test` and the complete UI-test session.
 ````
@@ -3137,7 +2614,7 @@ the hide should collapse the panel horizontally, to provide more space for the o
 ````text
 Updated the collapse behavior: selecting `Hide` shrinks the command panel to a narrow `Show` control, freeing its width for the chat panel. Selecting `Show` restores the full command list.
 
-Updated [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/meepmoop/MainWindow.java) and [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md).
+Updated [MainWindow.java](file/src/main/java/meepmoop/MainWindow.java) and [ui-test-plan.md](file/test/ui-test-plan.md).
 
 Verified: checkstyle, unit tests, and the complete UI test plan all pass.
 ````
@@ -3155,22 +2632,10 @@ Typing `help` in the chat now alternates the command panel between collapsed and
 
 Verified with checkstyle, unit tests, and the full console UI test plan.
 ````
-#### User prompt
 
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed to `origin/master`.
-
-Commit: `e1444d6 Add collapsible command reference panel`
 ````
 ## Improve error handling
 
-- Task ID: `01a05b47-662c-76f2-ac38-1c59d61f34a1`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3257,7 +2722,7 @@ The gaps are:
 - No negative test for a non-zero-padded activity date, e.g. `activity Dinner /at 2026-9-1 1800`.
 - No negative test for a non-zero-padded view date, e.g. `view 2026-9-1`.
 
-These should be added to [`ParserTest.java`](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/meepmoop/parser/ParserTest.java) to fully verify the exact `YYYY-MM-DD` requirement for every command that accepts a date.
+These should be added to [`ParserTest.java`](file/src/test/java/meepmoop/parser/ParserTest.java) to fully verify the exact `YYYY-MM-DD` requirement for every command that accepts a date.
 ````
 #### User prompt
 
@@ -3267,7 +2732,7 @@ add these additional tests
 #### Assistant final response
 
 ````text
-Added the missing JUnit cases in [ParserTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/meepmoop/parser/ParserTest.java):
+Added the missing JUnit cases in [ParserTest.java](file/src/test/java/meepmoop/parser/ParserTest.java):
 
 - `activity Dinner /at 2026-9-1 1800`
 - `view 2026-9-1`
@@ -3278,24 +2743,10 @@ Verification passed:
 
 - `./gradlew test`
 - Complete UI test plan (`TEST SESSION PASSED`)
-````
-#### User prompt
 
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed to `origin/master`.
-
-- Commit: `92044fd Reject invalid and duplicate itinerary data`
-- Working tree is clean.
 ````
 ## Draft chatbot user guide
 
-- Task ID: `01a05b5b-c6e9-7cc2-bf63-396a45471b5b`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3488,24 +2939,10 @@ Go ahead and replace docs/README.md with this draft
 #### Assistant final response
 
 ````text
-Replaced [docs/README.md](/Users/xp/Projects/CS3227-2610-MP1/docs/README.md) with the approved user guide.
+Replaced [docs/README.md](file/docs/README.md) with the approved user guide.
 
 Verified the Markdown diff with `git diff --check`; it has no whitespace errors.
 ````
-#### User prompt
-
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed successfully.
-
-- Commit: `b3c6f1d Docs: Add concise MeepMoop user guide`
-- Branch: `master`
-- Remote: `origin/master`
-- Working tree: clean
 ````
 #### User prompt
 
@@ -3515,7 +2952,7 @@ now check the main project README.md at the root and ensure it is up to date. ad
 #### Assistant final response
 
 ````text
-Updated the root [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md) to match the current project:
+Updated the root [README.md](file/README.md) to match the current project:
 
 - Added the published [MeepMoop User Guide](https://p-xp.github.io/CS3227-2610-MP1/) link.
 - Refreshed the project description, GUI and CLI instructions, storage location, test instructions, and IntelliJ setup.
@@ -3531,7 +2968,7 @@ remove it. only include information that the user needs to know to run or use th
 #### Assistant final response
 
 ````text
-Removed the command-line, testing, and IntelliJ setup sections from [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md).
+Removed the command-line, testing, and IntelliJ setup sections from [README.md](file/README.md).
 
 It now contains only user-relevant information: application purpose, User Guide link, launch command, basic use, and data-save location. Markdown validation passes.
 ````
@@ -3543,7 +2980,7 @@ you can keep the section on running tests
 #### Assistant final response
 
 ````text
-Restored the **Run tests** section in [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md). The README remains concise and passes Markdown whitespace validation.
+Restored the **Run tests** section in [README.md](file/README.md). The README remains concise and passes Markdown whitespace validation.
 ````
 #### User prompt
 
@@ -3561,8 +2998,6 @@ Committed and pushed the README update.
 ````
 ## Write developer guide
 
-- Task ID: `01a05b6c-10a1-7c32-b7c8-414d0d314851`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3572,7 +3007,7 @@ Write a developer guide (placed at docs/DeveloperGuide.md). This should describe
 #### Assistant final response
 
 ````text
-Created [DeveloperGuide.md](/Users/xp/Projects/CS3227-2610-MP1/docs/DeveloperGuide.md).
+Created [DeveloperGuide.md](file/docs/DeveloperGuide.md).
 
 It documents the current product architecture, command flow, model rules, persistence format/rollback, testing workflow, project layout, and development checklist. It also includes acknowledgements with cited sources for the Duke template, SE-EDU coding standard, OpenJFX, Gradle Wrapper, and JUnit.
 
@@ -3595,8 +3030,6 @@ Committed and pushed successfully.
 ````
 ## Suggest travel-themed chatbot names
 
-- Task ID: `01a05b6f-b230-7171-a96a-778c0bf591d5`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3644,33 +3077,17 @@ Renamed the chatbot to **Voyager** throughout the application and documentation.
 - Default saved itinerary file is now `data/voyager.txt`.
 - Updated README, User Guide, Developer Guide, Gradle project settings, unit tests, and the UI test plan.
 
-Key files: [Voyager.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/voyager/Voyager.java:25), [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/voyager/MainWindow.java:29), [README.md](/Users/xp/Projects/CS3227-2610-MP1/README.md:1).
+Key files: [Voyager.java](file/src/main/java/voyager/Voyager.java:25), [MainWindow.java](file/src/main/java/voyager/MainWindow.java:29), [README.md](file/README.md:1).
 
 Validation passed:
 
 - `./gradlew test`
 - Full UI test plan: `TEST SESSION PASSED`
 ````
-#### User prompt
 
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed successfully.
-
-- Commit: `5b4cd66 Rename chatbot to Voyager`
-- Branch: `master`
-- Remote: `origin/master`
-
-Local runtime files in `data/` remain untracked and were not included.
 ````
 ## Add chatbox command history
 
-- Task ID: `01a05b76-6e81-7331-8fb7-fbaa941b3948`
-- Working directory: `/Users/xp/Projects/CS3227-2610-MP1`
 
 #### User prompt
 
@@ -3685,22 +3102,9 @@ Implemented up-arrow command recall.
 - `↑` now pastes the most recently submitted non-empty command into the chat field, placing the caret at the end for easy editing. It includes invalid commands so users can correct them.
 - Added focused history tests and documented the GUI behavior in the UI test plan.
 
-Files: [MainWindow.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/voyager/MainWindow.java), [CommandHistory.java](/Users/xp/Projects/CS3227-2610-MP1/src/main/java/voyager/CommandHistory.java), [CommandHistoryTest.java](/Users/xp/Projects/CS3227-2610-MP1/src/test/java/voyager/CommandHistoryTest.java), [ui-test-plan.md](/Users/xp/Projects/CS3227-2610-MP1/test/ui-test-plan.md).
+Files: [MainWindow.java](file/src/main/java/voyager/MainWindow.java), [CommandHistory.java](file/src/main/java/voyager/CommandHistory.java), [CommandHistoryTest.java](file/src/test/java/voyager/CommandHistoryTest.java), [ui-test-plan.md](file/test/ui-test-plan.md).
 
 Verification: `./gradlew test` passed on Java 25.
 
 The project’s `test-ui` skill is unavailable. I ran its executable plan manually, but its cases expect a clean persistence file and failed because test runs shared generated data; I removed those generated `data/` files afterward.
-````
-#### User prompt
-
-````text
-commit and push
-````
-#### Assistant final response
-
-````text
-Committed and pushed `ee94743` — `Add command recall to chat input`.
-
-`data/` remains untracked and was intentionally excluded from the commit.
-````
-
+```

@@ -55,3 +55,27 @@ tasks.named('run') {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+/**
+ * Creates a distributable JAR containing Voyager and all runtime dependencies,
+ * including the JavaFX libraries for the current operating system.
+ */
+tasks.register('releaseJar', Jar) {
+    group = 'distribution'
+    description = 'Builds the self-contained Voyager release JAR.'
+    archiveFileName = 'Voyager.jar'
+    destinationDirectory = layout.projectDirectory.dir('release')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes('Main-Class': application.mainClass)
+    }
+
+    from(sourceSets.main.output)
+    dependsOn(configurations.runtimeClasspath)
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
