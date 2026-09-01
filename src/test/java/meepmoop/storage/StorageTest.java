@@ -21,7 +21,6 @@ import org.junit.jupiter.api.io.TempDir;
 import meepmoop.model.Accommodation;
 import meepmoop.model.Activity;
 import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
 import meepmoop.model.Transport;
 
 /** Tests file creation, round trips, validation, capacity, and I/O failures. */
@@ -146,19 +145,18 @@ class StorageTest {
     }
 
     @Test
-    void load_pathIsDirectory_throwsIOException() throws IOException {
+    void load_pathIsDirectory_throwsIoException() throws IOException {
         Path dataFile = Files.createDirectory(temporaryDirectory.resolve("directory.txt"));
 
         assertThrows(IOException.class, () -> new Storage(dataFile).load());
     }
 
     @Test
-    void save_parentIsFile_throwsIOExceptionAndDoesNotCreateDataFile() throws IOException {
+    void save_parentIsFile_throwsIoExceptionAndDoesNotCreateDataFile() throws IOException {
         Path blocker = Files.createFile(temporaryDirectory.resolve("blocker"));
         Path dataFile = blocker.resolve("data.txt");
 
-        assertThrows(IOException.class,
-                () -> new Storage(dataFile).save(new Itinerary()));
+        assertThrows(IOException.class, () -> new Storage(dataFile).save(new Itinerary()));
         assertTrue(Files.isRegularFile(blocker));
         assertFalse(Files.exists(dataFile));
     }

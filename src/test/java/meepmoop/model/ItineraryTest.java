@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -161,9 +162,8 @@ class ItineraryTest {
         Activity existing = new Activity("Existing");
         itinerary.add(existing);
 
-        IndexOutOfBoundsException exception = assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> itinerary.restore(planNumber, new Activity("Restored")));
+        Executable restoreAction = () -> itinerary.restore(planNumber, new Activity("Restored"));
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, restoreAction);
 
         assertEquals("invalid restore position", exception.getMessage());
         assertEquals(1, itinerary.getCount());

@@ -1,6 +1,5 @@
 package meepmoop.parser;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,12 +22,11 @@ class ParserTest {
     void parse_activityWithMixedCaseAndWhitespace_returnsTrimmedDescription() throws MeepException {
         Parser.ParsedCommand command = parser.parse("  AcTiViTy   Night  Safari  ");
 
-        assertAll(
-                () -> assertEquals(Parser.CommandType.ACTIVITY, command.getType()),
-                () -> assertEquals("Night  Safari", command.getDescription()),
-                () -> assertNull(command.getFrom()),
-                () -> assertNull(command.getTo()),
-                () -> assertEquals(0, command.getItemNumber()));
+        assertEquals(Parser.CommandType.ACTIVITY, command.getType());
+        assertEquals("Night  Safari", command.getDescription());
+        assertNull(command.getFrom());
+        assertNull(command.getTo());
+        assertEquals(0, command.getItemNumber());
     }
 
     @Test
@@ -36,11 +34,10 @@ class ParserTest {
         Parser.ParsedCommand command = parser.parse(
                 "STAY Beach Hotel /FROM 2028-02-29 /tO 2028-03-02");
 
-        assertAll(
-                () -> assertEquals(Parser.CommandType.STAY, command.getType()),
-                () -> assertEquals("Beach Hotel", command.getDescription()),
-                () -> assertEquals(LocalDate.of(2028, 2, 29), command.getFrom()),
-                () -> assertEquals(LocalDate.of(2028, 3, 2), command.getTo()));
+        assertEquals(Parser.CommandType.STAY, command.getType());
+        assertEquals("Beach Hotel", command.getDescription());
+        assertEquals(LocalDate.of(2028, 2, 29), command.getFrom());
+        assertEquals(LocalDate.of(2028, 3, 2), command.getTo());
     }
 
     @Test
@@ -58,11 +55,10 @@ class ParserTest {
         Parser.ParsedCommand command = parser.parse(
                 "transport Airport Shuttle /from Changi Airport /to City Hall");
 
-        assertAll(
-                () -> assertEquals(Parser.CommandType.TRANSPORT, command.getType()),
-                () -> assertEquals("Airport Shuttle", command.getDescription()),
-                () -> assertEquals("Changi Airport", command.getFromLocation()),
-                () -> assertEquals("City Hall", command.getToLocation()));
+        assertEquals(Parser.CommandType.TRANSPORT, command.getType());
+        assertEquals("Airport Shuttle", command.getDescription());
+        assertEquals("Changi Airport", command.getFromLocation());
+        assertEquals("City Hall", command.getToLocation());
     }
 
     @Test
@@ -78,9 +74,8 @@ class ParserTest {
     void parse_findWithMultipleKeywords_returnsNormalizedKeywords() throws MeepException {
         Parser.ParsedCommand command = parser.parse("  FiNd   book   flight  ");
 
-        assertAll(
-                () -> assertEquals(Parser.CommandType.FIND, command.getType()),
-                () -> assertEquals("book flight", command.getDescription()));
+        assertEquals(Parser.CommandType.FIND, command.getType());
+        assertEquals("book flight", command.getDescription());
     }
 
     @ParameterizedTest

@@ -16,10 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import meepmoop.exception.MeepException;
-import meepmoop.model.Accommodation;
 import meepmoop.model.Activity;
 import meepmoop.model.Itinerary;
-import meepmoop.model.Plan;
 import meepmoop.model.PlanType;
 import meepmoop.storage.Storage;
 import meepmoop.ui.Ui;

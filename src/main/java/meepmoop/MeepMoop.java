@@ -98,27 +98,30 @@ public class MeepMoop {
         try {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
-            case ACTIVITY:
-                return executeCommand(new ActivityCommand(command.getDescription(), command.getDateTime()));
-            case STAY:
-                return executeCommand(new StayCommand(command.getDescription(), command.getFrom(), command.getTo()));
-            case TRANSPORT:
-                return executeCommand(new TransportCommand(command.getDescription(),
-                        command.getFromLocation(), command.getToLocation()));
-            case BOOK:
-                return executeCommand(new BookingCommand(command.getItemNumber(), true));
-            case UNBOOK:
-                return executeCommand(new BookingCommand(command.getItemNumber(), false));
-            case DELETE:
-                return executeCommand(new DeleteCommand(command.getItemNumber()));
-            case LIST:
-                return executeCommand(new ListCommand());
-            case VIEW:
-                return executeCommand(new ViewCommand(command.getFrom()));
-            case FIND:
-                return executeCommand(new FindCommand(command.getDescription()));
-            case EXIT:
-                return executeCommand(new ExitCommand());
+                case ACTIVITY:
+                    return executeCommand(new ActivityCommand(command.getDescription(), command.getDateTime()));
+                case STAY:
+                    return executeCommand(new StayCommand(command.getDescription(), command.getFrom(),
+                            command.getTo()));
+                case TRANSPORT:
+                    return executeCommand(new TransportCommand(command.getDescription(),
+                            command.getFromLocation(), command.getToLocation()));
+                case BOOK:
+                    return executeCommand(new BookingCommand(command.getItemNumber(), true));
+                case UNBOOK:
+                    return executeCommand(new BookingCommand(command.getItemNumber(), false));
+                case DELETE:
+                    return executeCommand(new DeleteCommand(command.getItemNumber()));
+                case LIST:
+                    return executeCommand(new ListCommand());
+                case VIEW:
+                    return executeCommand(new ViewCommand(command.getFrom()));
+                case FIND:
+                    return executeCommand(new FindCommand(command.getDescription()));
+                case EXIT:
+                    return executeCommand(new ExitCommand());
+                default:
+                    throw new AssertionError("unsupported command type");
             }
         } catch (MeepException exception) {
             ui.showError(exception.getMessage());

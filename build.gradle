@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'checkstyle'
 }
 
 repositories {
@@ -10,6 +11,10 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
     }
+}
+
+checkstyle {
+    toolVersion = '11.0.0'
 }
 
 application {

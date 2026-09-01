@@ -139,17 +139,17 @@ public final class Parser {
         String details = inputParts.length == 2 ? inputParts[1].trim() : "";
 
         return switch (keyword) {
-        case "activity" -> parseActivity(details);
-        case "stay" -> parseStay(details);
-        case "transport" -> parseTransport(details);
-        case "book" -> parseItemCommand(CommandType.BOOK, details);
-        case "unbook" -> parseItemCommand(CommandType.UNBOOK, details);
-        case "delete" -> parseItemCommand(CommandType.DELETE, details);
-        case "list" -> parseArgumentlessCommand(CommandType.LIST, details);
-        case "view" -> parseView(details);
-        case "find" -> parseFind(details);
-        case "exit" -> parseArgumentlessCommand(CommandType.EXIT, details);
-        default -> throw new MeepException(INVALID_INPUT);
+            case "activity" -> parseActivity(details);
+            case "stay" -> parseStay(details);
+            case "transport" -> parseTransport(details);
+            case "book" -> parseItemCommand(CommandType.BOOK, details);
+            case "unbook" -> parseItemCommand(CommandType.UNBOOK, details);
+            case "delete" -> parseItemCommand(CommandType.DELETE, details);
+            case "list" -> parseArgumentlessCommand(CommandType.LIST, details);
+            case "view" -> parseView(details);
+            case "find" -> parseFind(details);
+            case "exit" -> parseArgumentlessCommand(CommandType.EXIT, details);
+            default -> throw new MeepException(INVALID_INPUT);
         };
     }
 

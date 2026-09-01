@@ -105,25 +105,25 @@ public class Storage {
     private static String formatPlan(Plan plan) {
         String booked = plan.isBooked() ? "1" : "0";
         return switch (plan.getType()) {
-        case ACTIVITY -> {
-            Activity activity = (Activity) plan;
-            yield activity.getScheduledAt() == null
-                    ? String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()))
-                    : String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()),
-                    encode(activity.getScheduledAt().toString()));
-        }
-        case ACCOMMODATION -> {
-            Accommodation accommodation = (Accommodation) plan;
-            yield String.join(FIELD_SEPARATOR, "S", booked,
-                    encode(plan.getDescription()), encode(accommodation.getFromDate().toString()),
-                    encode(accommodation.getToDate().toString()));
-        }
-        case TRANSPORT -> {
-            Transport transport = (Transport) plan;
-            yield String.join(FIELD_SEPARATOR, "T", booked,
-                    encode(plan.getDescription()), encode(transport.getFromLocation()),
-                    encode(transport.getToLocation()));
-        }
+            case ACTIVITY -> {
+                Activity activity = (Activity) plan;
+                yield activity.getScheduledAt() == null
+                        ? String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()))
+                        : String.join(FIELD_SEPARATOR, "A", booked, encode(plan.getDescription()),
+                        encode(activity.getScheduledAt().toString()));
+            }
+            case ACCOMMODATION -> {
+                Accommodation accommodation = (Accommodation) plan;
+                yield String.join(FIELD_SEPARATOR, "S", booked,
+                        encode(plan.getDescription()), encode(accommodation.getFromDate().toString()),
+                        encode(accommodation.getToDate().toString()));
+            }
+            case TRANSPORT -> {
+                Transport transport = (Transport) plan;
+                yield String.join(FIELD_SEPARATOR, "T", booked,
+                        encode(plan.getDescription()), encode(transport.getFromLocation()),
+                        encode(transport.getToLocation()));
+            }
         };
     }
 
@@ -135,10 +135,10 @@ public class Storage {
         }
 
         Plan plan = switch (fields[0]) {
-        case "A" -> parseActivity(fields);
-        case "S" -> parseAccommodation(fields);
-        case "T" -> parseTransport(fields);
-        default -> throw new IllegalArgumentException("unknown plan type");
+            case "A" -> parseActivity(fields);
+            case "S" -> parseAccommodation(fields);
+            case "T" -> parseTransport(fields);
+            default -> throw new IllegalArgumentException("unknown plan type");
         };
         plan.setBooked(fields[1].equals("1"));
         return plan;
