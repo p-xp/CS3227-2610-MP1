@@ -1,90 +1,162 @@
 # MeepMoop User Guide
 
-MeepMoop is a chatbot for building and managing a travel itinerary. Use the
-JavaFX GUI by entering commands in its text field and pressing Enter or
-clicking **Send**. Commands and the `/from` and `/to` markers are
-case-insensitive. Leading and trailing whitespace is ignored, and one or more
-spaces may separate the command keyword from its arguments.
+**MeepMoop** is a travel-planning chatbot that helps you organise activities,
+accommodation, and transport in one itinerary.
 
-## Console response formatting
+Enter a command in the chat field, then press <kbd>Enter</kbd> or select
+**Send**. Your itinerary is shown in the left panel and is saved automatically
+between sessions.
 
-MeepMoop uses the following line to mark the end of each response:
+## Quick start
 
-```text
-____________________________________________________________
-```
-
-The separator follows these rules:
-
-- Every response ends with exactly one separator. This includes the greeting,
-  successful command responses, validation errors, and the goodbye response.
-- A response does not begin with a separator.
-- A multi-line response has only one separator, placed after its final line.
-- Consecutive responses therefore have exactly one separator between them,
-  with no adjacent duplicate separator lines.
-
-The implementation and executable UI test expectations follow this output
-contract.
-
-## Adding an activity
-
-Use `activity <description>`. The description must contain non-whitespace text.
+Try these commands:
 
 ```text
-activity Museum visit
+activity Visit Gardens by the Bay /at 2026-09-01 1000
+stay City Hotel /from 2026-09-01 /to 2026-09-03
+transport Airport Shuttle /from Changi Airport /to City Hall
+book 1
 ```
 
-## Adding accommodation
+## Features
 
-Use `stay <name> /from <date> /to <date>`.
+### Add an activity
 
-- Dates must use the ISO `YYYY-MM-DD` format and represent real calendar dates.
-- The `/from` date must be on or before the `/to` date.
-- `/from` and `/to` are reserved markers. Each must occur exactly once and in
-  that order, with nonempty text before, between, and after them.
+Adds an activity to your itinerary.
 
 ```text
-stay Beach Hotel /from 2026-09-01 /to 2026-09-03
+activity DESCRIPTION [/at YYYY-MM-DD HHmm]
 ```
 
-## Adding transport
+Examples:
 
-Use `transport <name> /from <origin> /to <destination>`.
+```text
+activity Visit the museum
+activity Visit Gardens by the Bay /at 2026-09-01 1000
+```
 
-The `/from` and `/to` markers follow the same single-use, ordered, and nonempty
-field rules as accommodation commands. Names and locations may contain spaces.
+The date and time are optional. Use a real date in `YYYY-MM-DD` format and a
+24-hour time in `HHmm` format.
+
+### Add accommodation
+
+Adds a stay to your itinerary.
+
+```text
+stay NAME /from START_DATE /to END_DATE
+```
+
+Example:
+
+```text
+stay City Hotel /from 2026-09-01 /to 2026-09-03
+```
+
+Dates must use `YYYY-MM-DD`, and the end date must be later than the start
+date.
+
+### Add transport
+
+Adds a transport arrangement to your itinerary.
+
+```text
+transport NAME /from ORIGIN /to DESTINATION
+```
+
+Example:
 
 ```text
 transport Airport Shuttle /from Changi Airport /to City Hall
 ```
 
-## Listing itinerary items
+### Book or unbook an item
 
-Use `list` without arguments. Items are displayed in insertion order using
-one-based item numbers.
-
-## Finding itinerary items
-
-Use `find <keyword> [<keyword>...]` to find items by their descriptions. The
-search is case-insensitive, and an item must contain every supplied keyword in
-any order. Matching items retain their original item numbers. If no items
-match, MeepMoop displays the requested keywords.
+Marks an itinerary item as booked or unbooked.
 
 ```text
-find book flight
+book ITEM_NUMBER
+unbook ITEM_NUMBER
 ```
 
-## Booking and unbooking
+Example:
 
-Use `book <item number>` or `unbook <item number>`. The item number must be a
-positive whole number that identifies an existing item. Missing, zero,
-negative, nonnumeric, overflowing, and out-of-range numbers are rejected.
+```text
+book 2
+```
 
-## Deleting an item
+Item numbers are shown in the itinerary panel. They start at 1.
 
-Use `delete <item number>`. The item number follows the same validation rules
-as booking commands. Remaining items are renumbered after deletion.
+### View plans on a date
 
-## Exiting
+Shows dated activities and accommodation that occur on a specified date.
 
-Use `exit` without arguments to end the session.
+```text
+view DATE
+```
+
+Example:
+
+```text
+view 2026-09-02
+```
+
+### Find itinerary items
+
+Finds items whose descriptions contain **all** supplied keywords. Searching is
+case-insensitive.
+
+```text
+find KEYWORD [MORE_KEYWORDS...]
+```
+
+Example:
+
+```text
+find airport shuttle
+```
+
+### Delete an item
+
+Removes an item from your itinerary.
+
+```text
+delete ITEM_NUMBER
+```
+
+Example:
+
+```text
+delete 3
+```
+
+Remaining items are renumbered automatically.
+
+### Refresh the itinerary list
+
+```text
+list
+```
+
+Use this command to refresh the itinerary panel manually.
+
+### Show or hide command help
+
+Select **Hide** or **Show** in the command panel. You can also enter:
+
+```text
+help
+```
+
+### Exit MeepMoop
+
+```text
+exit
+```
+
+## Tips
+
+- Commands and the `/from`, `/to`, and `/at` markers are case-insensitive.
+- Extra spaces at the beginning, end, or between command parts are accepted.
+- Item numbers must be positive whole numbers.
+- MeepMoop rejects duplicate itinerary items and keeps your existing itinerary
+  unchanged when a command is invalid.
