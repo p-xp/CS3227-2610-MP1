@@ -3,6 +3,7 @@ package meepmoop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,6 +87,20 @@ class MeepMoopTest {
         assertSame(first, itinerary.get(1));
         assertSame(second, itinerary.get(2));
         assertEquals(SAVE_ERROR, output);
+    }
+
+    @Test
+    void handleCommand_invalidThenValidCommand_updatesResponseValidity() {
+        ByteArrayOutputStream capturedBytes = new ByteArrayOutputStream();
+        MeepMoop meepMoop = new MeepMoop(new Itinerary(), new Parser(),
+                new Storage(temporaryDirectory.resolve("data.txt")),
+                new Ui(new PrintStream(capturedBytes, true, StandardCharsets.UTF_8)));
+
+        meepMoop.handleCommand("unknown-command");
+        assertFalse(meepMoop.wasLastCommandValid());
+
+        meepMoop.handleCommand("list");
+        assertTrue(meepMoop.wasLastCommandValid());
     }
 
     /** Creates storage whose parent path is a file, forcing every save to fail. */

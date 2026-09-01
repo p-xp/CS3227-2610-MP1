@@ -32,6 +32,7 @@ public class MeepMoop {
     private final Parser parser;
     private final Ui ui;
     private final boolean hasCorruptedRecords;
+    private boolean wasLastCommandValid = true;
 
     /**
      * Creates the application and loads the itinerary stored at the supplied path.
@@ -106,6 +107,8 @@ public class MeepMoop {
 
     /** Interprets and performs one command entered by the user. */
     boolean handleCommand(String input) {
+        ui.clearResponseStatus();
+        wasLastCommandValid = true;
         try {
             Parser.ParsedCommand command = parser.parse(input);
             switch (command.getType()) {
@@ -137,12 +140,24 @@ public class MeepMoop {
         } catch (MeepException exception) {
             ui.showError(exception.getMessage());
         }
+        wasLastCommandValid = !ui.isLastResponseError();
         return true;
+    }
+
+    /** Returns whether the most recently processed command completed without an error. */
+    boolean wasLastCommandValid() {
+        return wasLastCommandValid;
+    }
+
+    /** Returns the itinerary currently managed by this application. */
+    Itinerary getItinerary() {
+        return itinerary;
     }
 
     /** Executes a command object and reports whether the command loop should continue. */
     private boolean executeCommand(Command command) throws MeepException {
         command.execute(itinerary, ui, storage);
+        wasLastCommandValid = !ui.isLastResponseError();
         return !command.isExit();
     }
 

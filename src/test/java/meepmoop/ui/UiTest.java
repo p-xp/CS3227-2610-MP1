@@ -30,7 +30,7 @@ class UiTest {
             ui.showPlanAdded(activity, itinerary.getCount());
             activity.setBooked(true);
             ui.showBookingUpdated(activity, true);
-            ui.showList(itinerary);
+            ui.showList();
             ui.showPlansOn(LocalDate.of(2026, 9, 1), itinerary);
             ui.showPlansMatchingKeywords("museum", itinerary);
             ui.showPlansMatchingKeywords("hotel", itinerary);
@@ -53,8 +53,7 @@ class UiTest {
                 + SEPARATOR + newline
                 + "Booked: [A] [X] Museum (at: 1 Sep 2026 9am)" + newline
                 + SEPARATOR + newline
-                + "Here are the items in your itinerary:" + newline
-                + "1. [A] [X] Museum (at: 1 Sep 2026 9am)" + newline
+                + "List has been manually refreshed." + newline
                 + SEPARATOR + newline
                 + "Here are the items in your itinerary on 1 Sep 2026:" + newline
                 + "[A] [X] Museum (at: 1 Sep 2026 9am)" + newline

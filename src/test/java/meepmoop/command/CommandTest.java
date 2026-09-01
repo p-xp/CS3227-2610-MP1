@@ -39,8 +39,7 @@ class CommandTest {
         }
 
         assertEquals(1, itinerary.getCount());
-        assertEquals("Here are the items in your itinerary:" + System.lineSeparator()
-                + "1. [A] [ ] Museum" + System.lineSeparator()
+        assertEquals("List has been manually refreshed." + System.lineSeparator()
                 + SEPARATOR + System.lineSeparator(), capturedBytes.toString(StandardCharsets.UTF_8));
     }
 

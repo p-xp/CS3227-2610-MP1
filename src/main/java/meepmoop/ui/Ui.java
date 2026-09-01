@@ -13,9 +13,11 @@ import meepmoop.model.Plan;
 /** Handles all text displayed to the user by the MeepMoop command-line interface. */
 public final class Ui {
     private static final String SEPARATOR = "____________________________________________________________";
+    private static final String LIST_REFRESHED_MESSAGE = "List has been manually refreshed.";
     private static final DateTimeFormatter DISPLAY_DATE =
             DateTimeFormatter.ofPattern("d MMM uuuu", Locale.ENGLISH);
     private final PrintStream output;
+    private boolean isLastResponseError;
 
     /** Creates a user interface that writes to the standard output stream. */
     public Ui() {
@@ -53,18 +55,21 @@ public final class Ui {
 
     /** Shows a command validation error. */
     public void showError(String message) {
+        isLastResponseError = true;
         output.println(message);
         showSeparator();
     }
 
     /** Shows an error explaining that a state change could not be saved. */
     public void showSaveError() {
+        isLastResponseError = true;
         output.println("Unable to save data.");
         showSeparator();
     }
 
     /** Shows an error explaining that the itinerary has reached its capacity. */
     public void showItineraryFull() {
+        isLastResponseError = true;
         output.println("Itinerary is full");
         showSeparator();
     }
@@ -91,13 +96,20 @@ public final class Ui {
         showSeparator();
     }
 
-    /** Shows every itinerary item in its one-based display order. */
-    public void showList(Itinerary itinerary) {
-        output.println("Here are the items in your itinerary:");
-        for (int index = 0; index < itinerary.getCount(); index++) {
-            output.println((index + 1) + ". " + itinerary.get(index + 1));
-        }
+    /** Shows confirmation that the itinerary list was refreshed in the graphical interface. */
+    public void showList() {
+        output.println(LIST_REFRESHED_MESSAGE);
         showSeparator();
+    }
+
+    /** Clears the error status before a new command is processed. */
+    public void clearResponseStatus() {
+        isLastResponseError = false;
+    }
+
+    /** Returns whether the most recently displayed command response was an error. */
+    public boolean isLastResponseError() {
+        return isLastResponseError;
     }
 
     /** Shows all itinerary items that occur on the requested date. */
