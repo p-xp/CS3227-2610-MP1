@@ -25,7 +25,8 @@ import meepmoop.ui.Ui;
  * The main entry point for the MeepMoop travel itinerary chatbot.
  */
 public class MeepMoop {
-    private static final Path DATA_FILE = Path.of("data", "meepmoop.txt");
+    /** The default location used to persist the itinerary. */
+    public static final Path DEFAULT_DATA_FILE = Path.of("data", "meepmoop.txt");
     private final Storage storage;
     private final Itinerary itinerary;
     private final Parser parser;
@@ -38,9 +39,19 @@ public class MeepMoop {
      * does not start its command loop.
      */
     public MeepMoop(Path dataFile) {
+        this(dataFile, new Ui());
+    }
+
+    /**
+     * Creates the application using a supplied interface to display its responses.
+     *
+     * @param dataFile the file used to persist the itinerary
+     * @param ui the user interface that displays application responses
+     */
+    public MeepMoop(Path dataFile, Ui ui) {
         this.storage = new Storage(dataFile);
         this.parser = new Parser();
-        this.ui = new Ui();
+        this.ui = ui;
 
         Itinerary loadedItinerary = null;
         boolean loadedCorruptedRecords = false;
@@ -70,7 +81,7 @@ public class MeepMoop {
      * @param args command-line arguments, which are not used by this application
      */
     public static void main(String[] args) {
-        new MeepMoop(DATA_FILE).run();
+        new MeepMoop(DEFAULT_DATA_FILE).run();
     }
 
     /** Starts the user interface and processes commands until the user exits. */

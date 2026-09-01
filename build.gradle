@@ -18,10 +18,27 @@ checkstyle {
 }
 
 application {
-    mainClass = 'MeepMoop'
+    mainClass = 'meepmoop.Launcher'
 }
 
 dependencies {
+    String javaFxVersion = '17.0.7'
+    String operatingSystem = System.getProperty('os.name').toLowerCase()
+    String architecture = System.getProperty('os.arch').toLowerCase()
+    String javaFxPlatform
+    if (operatingSystem.contains('mac')) {
+        javaFxPlatform = architecture.contains('aarch64') || architecture.contains('arm') ? 'mac-aarch64' : 'mac'
+    } else if (operatingSystem.contains('win')) {
+        javaFxPlatform = 'win'
+    } else {
+        javaFxPlatform = architecture.contains('aarch64') || architecture.contains('arm') ? 'linux-aarch64' : 'linux'
+    }
+
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:${javaFxPlatform}")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:${javaFxPlatform}")
+
     testImplementation platform('org.junit:junit-bom:6.1.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

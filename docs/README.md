@@ -1,9 +1,10 @@
 # MeepMoop User Guide
 
-MeepMoop is a command-line chatbot for building and managing a travel
-itinerary. Commands and the `/from` and `/to` markers are case-insensitive.
-Leading and trailing whitespace is ignored, and one or more spaces may separate
-the command keyword from its arguments.
+MeepMoop is a chatbot for building and managing a travel itinerary. Use the
+JavaFX GUI by entering commands in its text field and pressing Enter or
+clicking **Send**. Commands and the `/from` and `/to` markers are
+case-insensitive. Leading and trailing whitespace is ignored, and one or more
+spaces may separate the command keyword from its arguments.
 
 ## Console response formatting
 
