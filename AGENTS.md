@@ -24,6 +24,13 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Java coding standard
+
+For every Java source or test change and every Java code review, invoke and follow
+the project-local `seedu-java-coding-standard` skill at
+`.codex/skills/seedu-java-coding-standard/SKILL.md`. Its rules apply to all Java
+code in this repository.
+
 ## Required workflow after code updates
 
 After every code update:
@@ -39,6 +46,8 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Git
 
+Before creating any commit, invoke and follow the project-local
+`seedu-git-standard` skill at `.codex/skills/seedu-git-standard/SKILL.md`.
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
