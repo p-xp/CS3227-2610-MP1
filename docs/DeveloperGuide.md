@@ -1,8 +1,8 @@
-# MeepMoop Developer Guide
+# Voyager Developer Guide
 
 ## 1. Introduction
 
-MeepMoop is a desktop travel-planning chatbot. It lets a user add activities,
+Voyager is a desktop travel-planning chatbot. It lets a user add activities,
 accommodation, and transport to one itinerary; book or unbook items; delete,
 find, and view them; and retain the itinerary between launches.
 
@@ -28,21 +28,21 @@ commands:
 sdk use java 25.0.3.fx-zulu
 ```
 
-The application entry point is `meepmoop.Launcher`. It launches JavaFX's
+The application entry point is `voyager.Launcher`. It launches JavaFX's
 `MainWindow`, which constructs the application coordinator with the default
-data file `data/meepmoop.txt`.
+data file `data/voyager.txt`.
 
 ## 2. Architecture
 
-MeepMoop has a deliberately small layered design. The JavaFX window owns
-presentation concerns; `MeepMoop` coordinates an operation; the parser turns
+Voyager has a deliberately small layered design. The JavaFX window owns
+presentation concerns; `Voyager` coordinates an operation; the parser turns
 text into validated data; command objects mutate or query the model; and
 storage persists a complete snapshot.
 
 ```mermaid
 flowchart LR
     U[User] --> W[MainWindow\nJavaFX]
-    W -->|command text| M[MeepMoop\ncoordinator]
+    W -->|command text| M[Voyager\ncoordinator]
     M --> P[Parser]
     P -->|ParsedCommand| M
     M --> C[Command]
@@ -50,7 +50,7 @@ flowchart LR
     C --> S[Storage]
     C --> UI[Ui\ntext responses]
     UI --> W
-    S <--> D[(data/meepmoop.txt)]
+    S <--> D[(data/voyager.txt)]
 ```
 
 `Ui` writes text responses to a `PrintStream`. In the graphical application,
@@ -64,19 +64,19 @@ or command code depend on JavaFX.
 | Component | Responsibility | Important classes |
 | --- | --- | --- |
 | UI | Renders the JavaFX window, conversation, itinerary sidebar, and command reference. | `MainWindow`, `Launcher` |
-| Coordinator | Loads state, dispatches parsed commands, tracks whether the last response was an error. | `MeepMoop` |
+| Coordinator | Loads state, dispatches parsed commands, tracks whether the last response was an error. | `Voyager` |
 | Parser | Normalises whitespace/casing and validates command syntax before execution. | `Parser`, `ParsedCommand` |
 | Commands | Encapsulate one user operation, including persistence and rollback for changes. | `Command` and its subclasses |
 | Model | Holds itinerary items and domain rules such as capacity, duplicates, booking state, and date filtering. | `Itinerary`, `Plan`, `Activity`, `Accommodation`, `Transport` |
 | Storage | Loads valid records and atomically replaces the saved snapshot. | `Storage` |
-| Text output | Formats user-facing responses and records whether the last response was an error. | `Ui`, `MeepException` |
+| Text output | Formats user-facing responses and records whether the last response was an error. | `Ui`, `VoyagerException` |
 
 ### 2.2 Control flow
 
 For a normal graphical command, `MainWindow.submitCommand()` displays the user
-text and delegates it to `MeepMoop.handleCommand()`. `MeepMoop` clears the
+text and delegates it to `Voyager.handleCommand()`. `Voyager` clears the
 previous response status, asks `Parser` for a `ParsedCommand`, selects the
-matching `Command` subclass, and executes it. A `MeepException` represents a
+matching `Command` subclass, and executes it. A `VoyagerException` represents a
 validation or domain error that is safe to show to the user. The coordinator
 then returns whether the program should remain open.
 
@@ -167,7 +167,7 @@ To add a command, update these locations together:
 1. Add a `CommandType` and parsing branch in `Parser`; validate all input here.
 2. Add a `Command` subclass that queries or changes `Itinerary` and calls
    `Ui` for the response.
-3. Dispatch the parsed type in `MeepMoop.handleCommand()`.
+3. Dispatch the parsed type in `Voyager.handleCommand()`.
 4. Add the command to `MainWindow.COMMAND_REFERENCE` and the User Guide.
 5. Add unit tests, then add positive and invalid-input UI cases to
    `test/ui-test-plan.md`.
@@ -272,7 +272,7 @@ deliberate correction.
 ## 7. Project layout
 
 ```text
-src/main/java/meepmoop/
+src/main/java/voyager/
   command/      Command objects
   exception/    User-facing checked exception
   model/        Itinerary and plan types
@@ -280,8 +280,8 @@ src/main/java/meepmoop/
   storage/      Snapshot persistence
   ui/           Text response formatter
   MainWindow    JavaFX presentation
-  MeepMoop      Application coordinator
-src/test/java/meepmoop/  JUnit tests mirroring production packages
+  Voyager      Application coordinator
+src/test/java/voyager/  JUnit tests mirroring production packages
 test/ui-test-plan.md     Human-readable and executable UI scenarios
 test-ui/                 Exact-output UI test runner and instructions
 config/checkstyle/       SE-EDU style configuration
@@ -290,7 +290,7 @@ docs/                    User and developer documentation
 
 ## 8. Acknowledgements
 
-MeepMoop is based on the [SE-EDU Duke project template](https://github.com/se-edu/duke).
+Voyager is based on the [SE-EDU Duke project template](https://github.com/se-edu/duke).
 The template supplied the initial project structure, Gradle-wrapper setup,
 contributor/documentation scaffolding, and educational Java/JavaFX testing
 materials. The repository history retains the original attribution to Jeffry
@@ -302,6 +302,6 @@ through its Checkstyle configuration. It uses the [OpenJFX documentation](https:
 for the JavaFX platform and setup, the [Gradle Wrapper documentation](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
 for the reproducible build-wrapper approach, and the [JUnit User Guide](https://docs.junit.org/current/user-guide/)
 for the JUnit test framework. These external projects and documents are cited
-for the ideas, code/configuration, or documentation reused; all MeepMoop
+for the ideas, code/configuration, or documentation reused; all Voyager
 application-specific behaviour and prose in this guide are maintained in this
 repository.

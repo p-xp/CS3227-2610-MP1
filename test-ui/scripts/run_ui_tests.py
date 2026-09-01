@@ -31,7 +31,7 @@ def main() -> int:
         print(f"TEST SESSION FAILED: {error}")
         return 1
 
-    data_file = Path("data/meepmoop.txt")
+    data_file = Path("data/voyager.txt")
     data_file_existed = data_file.is_file()
     original_data = data_file.read_bytes() if data_file_existed else None
     data_folder_existed = data_file.parent.exists()

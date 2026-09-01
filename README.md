@@ -1,10 +1,10 @@
-# MeepMoop Travel Planner
+# Voyager Travel Planner
 
-MeepMoop is a JavaFX chatbot for planning and managing a travel itinerary.
+Voyager is a JavaFX chatbot for planning and managing a travel itinerary.
 Add activities, accommodation, and transport, then find, view, book, or remove
 them through simple chat commands.
 
-See the published [MeepMoop User Guide](https://p-xp.github.io/CS3227-2610-MP1/)
+See the published [Voyager User Guide](https://p-xp.github.io/CS3227-2610-MP1/)
 for command examples and feature details.
 
 ## Run the application
@@ -26,7 +26,7 @@ activity Visit the museum /at 2026-09-01 1800
 stay City Hotel /from 2026-09-01 /to 2026-09-03
 ```
 
-MeepMoop saves your itinerary automatically in `data/meepmoop.txt`.
+Voyager saves your itinerary automatically in `data/voyager.txt`.
 
 ## Run tests
 

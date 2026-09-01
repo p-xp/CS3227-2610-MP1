@@ -1,6 +1,6 @@
-# MeepMoop User Guide
+# Voyager User Guide
 
-**MeepMoop** is a travel-planning chatbot that helps you organise activities,
+**Voyager** is a travel-planning chatbot that helps you organise activities,
 accommodation, and transport in one itinerary.
 
 Enter a command in the chat field, then press <kbd>Enter</kbd> or select
@@ -147,7 +147,7 @@ Select **Hide** or **Show** in the command panel. You can also enter:
 help
 ```
 
-### Exit MeepMoop
+### Exit Voyager
 
 ```text
 exit
@@ -158,5 +158,5 @@ exit
 - Commands and the `/from`, `/to`, and `/at` markers are case-insensitive.
 - Extra spaces at the beginning, end, or between command parts are accepted.
 - Item numbers must be positive whole numbers.
-- MeepMoop rejects duplicate itinerary items and keeps your existing itinerary
+- Voyager rejects duplicate itinerary items and keeps your existing itinerary
   unchanged when a command is invalid.
