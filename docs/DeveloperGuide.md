@@ -8,7 +8,7 @@ find, and view them; and retain the itinerary between launches.
 
 This guide describes the **current `master` source tree** (the product after
 the `v0.1.0` tag), not just the tagged release. The public-facing command
-reference is in the [User Guide](README.md).
+reference is in the [User Guide](UserGuide.md).
 
 ### 1.1 Setting up and building
 

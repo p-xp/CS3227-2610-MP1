@@ -249,9 +249,10 @@ class CommandTest {
         Itinerary itinerary = new Itinerary();
         itinerary.add(new Activity("Museum"));
         Storage storage = storage();
+        Command command = new ActivityCommand("Museum", null);
 
-        VoyagerException exception = assertThrows(
-                VoyagerException.class, () -> new ActivityCommand("Museum", null).execute(itinerary, new Ui(), storage));
+        VoyagerException exception =
+                assertThrows(VoyagerException.class, () -> command.execute(itinerary, new Ui(), storage));
 
         assertEquals("Duplicate item. An identical itinerary item already exists.", exception.getMessage());
         assertEquals(1, itinerary.getCount());
