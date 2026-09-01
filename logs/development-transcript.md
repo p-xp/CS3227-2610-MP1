@@ -1362,6 +1362,34 @@ The runner emitted the complete console transcript, including all 100 successful
 #### User prompt
 
 ````text
+Is it safe to skip phases 4/5 and go straight to 6? if yes, proceed with phase 6
+````
+#### Assistant final response
+
+````text
+It is not safe to skip both phases.
+
+Phase 5 can mostly be deferred because its domain-model changes are not strict prerequisites for parsing. Phase 4 should come first: Phase 6 restructures parsing and adds many malformed-input rules, so unit tests are needed to distinguish intended validation changes from refactoring regressions. UI tests alone provide slow, coarse feedback.
+
+Phase 6 also remains blocked by unresolved Phase 1 decisions:
+
+- Are accommodation dates validated as real dates?
+- Must the start date be on or before the end date?
+- Can `/from` or `/to` appear inside descriptions or locations?
+- Should repeated delimiters be rejected?
+
+Recommended path:
+
+1. Implement a minimal Phase 4 covering current model and parsing behavior.
+2. Finish these Phase 1 decisions.
+3. Proceed with Phase 6.
+4. Return to the remaining Phase 5 hardening afterward.
+
+I have not changed the repository because your instruction to proceed was conditional on skipping being safe.
+````
+#### User prompt
+
+````text
 Proceed with the full phase 4.
 
 
