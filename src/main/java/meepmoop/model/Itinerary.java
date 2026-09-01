@@ -27,6 +27,38 @@ public class Itinerary {
         return true;
     }
 
+    /** Returns whether an itinerary item with the same type-specific details already exists. */
+    public boolean hasDuplicate(Plan candidate) {
+        Objects.requireNonNull(candidate, "candidate must not be null");
+        for (Plan existingPlan : plans) {
+            if (hasSameDetails(existingPlan, candidate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Compares the user-supplied details that identify a plan, excluding its booking state. */
+    private static boolean hasSameDetails(Plan firstPlan, Plan secondPlan) {
+        if (firstPlan.getType() != secondPlan.getType()
+                || !firstPlan.getDescription().equals(secondPlan.getDescription())) {
+            return false;
+        }
+        if (firstPlan instanceof Activity firstActivity && secondPlan instanceof Activity secondActivity) {
+            return Objects.equals(firstActivity.getScheduledAt(), secondActivity.getScheduledAt());
+        }
+        if (firstPlan instanceof Accommodation firstAccommodation
+                && secondPlan instanceof Accommodation secondAccommodation) {
+            return firstAccommodation.getFromDate().equals(secondAccommodation.getFromDate())
+                    && firstAccommodation.getToDate().equals(secondAccommodation.getToDate());
+        }
+        if (firstPlan instanceof Transport firstTransport && secondPlan instanceof Transport secondTransport) {
+            return firstTransport.getFromLocation().equals(secondTransport.getFromLocation())
+                    && firstTransport.getToLocation().equals(secondTransport.getToLocation());
+        }
+        throw new IllegalArgumentException("unsupported plan type");
+    }
+
     /** Returns the number of plans currently stored. */
     public int getCount() {
         return plans.size();

@@ -234,7 +234,7 @@ class CommandTest {
     }
 
     @Test
-    void activityCommand_executeAddsActivityAndSaves() throws IOException {
+    void activityCommand_executeAddsActivityAndSaves() throws IOException, MeepException {
         Itinerary itinerary = new Itinerary();
         Storage storage = storage();
 
@@ -245,7 +245,21 @@ class CommandTest {
     }
 
     @Test
-    void activityCommand_whenSaveFails_removesAddedActivity() throws IOException {
+    void addCommands_duplicateItemThrowExceptionWithoutSaving() throws IOException {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Activity("Museum"));
+        Storage storage = storage();
+
+        MeepException exception = assertThrows(
+                MeepException.class, () -> new ActivityCommand("Museum", null).execute(itinerary, new Ui(), storage));
+
+        assertEquals("Duplicate item. An identical itinerary item already exists.", exception.getMessage());
+        assertEquals(1, itinerary.getCount());
+        assertFalse(Files.exists(temporaryDirectory.resolve("meepmoop.txt")));
+    }
+
+    @Test
+    void activityCommand_whenSaveFails_removesAddedActivity() throws IOException, MeepException {
         Itinerary itinerary = new Itinerary();
         Path blocker = Files.createFile(temporaryDirectory.resolve("activity-blocker"));
         Storage failingStorage = new Storage(blocker.resolve("meepmoop.txt"));
@@ -256,7 +270,7 @@ class CommandTest {
     }
 
     @Test
-    void activityCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+    void activityCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException, MeepException {
         Itinerary itinerary = fullItinerary();
         Storage storage = storage();
 
@@ -267,7 +281,7 @@ class CommandTest {
     }
 
     @Test
-    void stayCommand_executeAddsStayAndSaves() throws IOException {
+    void stayCommand_executeAddsStayAndSaves() throws IOException, MeepException {
         Itinerary itinerary = new Itinerary();
         Storage storage = storage();
 
@@ -279,7 +293,7 @@ class CommandTest {
     }
 
     @Test
-    void stayCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+    void stayCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException, MeepException {
         Itinerary itinerary = fullItinerary();
         Storage storage = storage();
 
@@ -291,7 +305,7 @@ class CommandTest {
     }
 
     @Test
-    void transportCommand_executeAddsTransportAndSaves() throws IOException {
+    void transportCommand_executeAddsTransportAndSaves() throws IOException, MeepException {
         Itinerary itinerary = new Itinerary();
         Storage storage = storage();
 
@@ -302,7 +316,7 @@ class CommandTest {
     }
 
     @Test
-    void transportCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException {
+    void transportCommand_fullItinerary_doesNotAddOrSavePlan() throws IOException, MeepException {
         Itinerary itinerary = fullItinerary();
         Storage storage = storage();
 

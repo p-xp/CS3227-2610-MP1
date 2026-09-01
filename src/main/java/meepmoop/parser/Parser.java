@@ -219,12 +219,12 @@ public final class Parser {
         return new String[] {description, from, to};
     }
 
-    /** Requires real ISO dates whose start is not after their end. */
+    /** Requires real ISO dates whose start is strictly before their end. */
     private static LocalDate[] validateStayDates(String fromText, String toText) throws MeepException {
         try {
             LocalDate fromDate = LocalDate.parse(fromText);
             LocalDate toDate = LocalDate.parse(toText);
-            if (fromDate.isAfter(toDate)) {
+            if (!fromDate.isBefore(toDate)) {
                 throw new MeepException(INVALID_STAY_DATES);
             }
             return new LocalDate[] {fromDate, toDate};

@@ -3,6 +3,7 @@ package meepmoop.command;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import meepmoop.exception.MeepException;
 import meepmoop.model.Activity;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
@@ -22,8 +23,11 @@ public final class ActivityCommand extends Command {
 
     /** Adds the activity, removing it again if saving fails. */
     @Override
-    public void execute(Itinerary itinerary, Ui ui, Storage storage) {
+    public void execute(Itinerary itinerary, Ui ui, Storage storage) throws MeepException {
         Plan plan = new Activity(description, scheduledAt);
+        if (itinerary.hasDuplicate(plan)) {
+            throw new MeepException("Duplicate item. An identical itinerary item already exists.");
+        }
         if (!itinerary.add(plan)) {
             ui.showItineraryFull();
             return;

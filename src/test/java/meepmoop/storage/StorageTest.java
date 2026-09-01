@@ -117,6 +117,8 @@ class StorageTest {
                         + " | " + encode("2026-03-01"),
                 "S | 0 | " + encode("Hotel") + " | " + encode("2026-09-03")
                         + " | " + encode("2026-09-01"),
+                "S | 0 | " + encode("Same-day Hotel") + " | " + encode("2026-09-03")
+                        + " | " + encode("2026-09-03"),
                 "T | 0 | " + encode("Bus") + " | " + encode("Origin"),
                 activityRecord("Valid last", true));
         Files.write(dataFile, lines, StandardCharsets.UTF_8);
@@ -143,6 +145,19 @@ class StorageTest {
         assertTrue(result.hasCorruptedRecords());
         assertEquals(100, result.getItinerary().getCount());
         assertEquals("Plan 100", result.getItinerary().get(100).getDescription());
+    }
+
+    @Test
+    void load_duplicateRecords_skipsLaterRecordAndWarns() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("data.txt");
+        Files.write(dataFile, List.of(activityRecord("Museum", false), activityRecord("Museum", true)),
+                StandardCharsets.UTF_8);
+
+        Storage.LoadResult result = new Storage(dataFile).load();
+
+        assertTrue(result.hasCorruptedRecords());
+        assertEquals(1, result.getItinerary().getCount());
+        assertFalse(result.getItinerary().get(1).isBooked());
     }
 
     @Test

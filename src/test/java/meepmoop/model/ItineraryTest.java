@@ -49,6 +49,32 @@ class ItineraryTest {
     }
 
     @Test
+    void hasDuplicate_sameTypeSpecificDetails_returnsTrueRegardlessOfBookingState() {
+        Itinerary itinerary = new Itinerary();
+        Activity existingActivity = new Activity("Museum", LocalDate.of(2026, 9, 1).atTime(10, 0));
+        existingActivity.setBooked(true);
+        itinerary.add(existingActivity);
+
+        assertTrue(itinerary.hasDuplicate(new Activity("Museum", LocalDate.of(2026, 9, 1).atTime(10, 0))));
+        assertFalse(itinerary.hasDuplicate(new Activity("Museum", LocalDate.of(2026, 9, 1).atTime(11, 0))));
+        assertFalse(itinerary.hasDuplicate(new Activity("Museum")));
+    }
+
+    @Test
+    void hasDuplicate_transportAndAccommodationConsiderAllTheirDetails() {
+        Itinerary itinerary = new Itinerary();
+        itinerary.add(new Accommodation("Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3)));
+        itinerary.add(new Transport("Flight", "Singapore", "Tokyo"));
+
+        assertTrue(itinerary.hasDuplicate(
+                new Accommodation("Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 3))));
+        assertFalse(itinerary.hasDuplicate(
+                new Accommodation("Hotel", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 4))));
+        assertTrue(itinerary.hasDuplicate(new Transport("Flight", "Singapore", "Tokyo")));
+        assertFalse(itinerary.hasDuplicate(new Transport("Flight", "Singapore", "Osaka")));
+    }
+
+    @Test
     void add_ninetyNineExistingPlans_acceptsHundredthPlan() {
         Itinerary itinerary = itineraryWithPlans(MAX_PLANS - 1);
         Activity lastPlan = new Activity("Plan 100");

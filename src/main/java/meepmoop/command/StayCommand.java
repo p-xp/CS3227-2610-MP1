@@ -3,6 +3,7 @@ package meepmoop.command;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import meepmoop.exception.MeepException;
 import meepmoop.model.Accommodation;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
@@ -24,8 +25,11 @@ public final class StayCommand extends Command {
 
     /** Adds the stay, removing it again if saving fails. */
     @Override
-    public void execute(Itinerary itinerary, Ui ui, Storage storage) {
+    public void execute(Itinerary itinerary, Ui ui, Storage storage) throws MeepException {
         Plan plan = new Accommodation(description, from, to);
+        if (itinerary.hasDuplicate(plan)) {
+            throw new MeepException("Duplicate item. An identical itinerary item already exists.");
+        }
         if (!itinerary.add(plan)) {
             ui.showItineraryFull();
             return;

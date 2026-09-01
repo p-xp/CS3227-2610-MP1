@@ -41,13 +41,9 @@ class ParserTest {
     }
 
     @Test
-    void parse_stayWithSameStartAndEndDate_returnsCommand() throws MeepException {
-        Parser.ParsedCommand command = parser.parse(
-                "stay Hotel /from 2026-09-01 /to 2026-09-01");
-
-        assertEquals(Parser.CommandType.STAY, command.getType());
-        assertEquals(LocalDate.of(2026, 9, 1), command.getFrom());
-        assertEquals(LocalDate.of(2026, 9, 1), command.getTo());
+    void parse_stayWithSameStartAndEndDate_throwsStayDateError() {
+        assertParseError("stay Hotel /from 2026-09-01 /to 2026-09-01",
+                "Invalid stay dates. Use valid dates in YYYY-MM-DD order");
     }
 
     @Test
@@ -79,8 +75,9 @@ class ParserTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"activity Dinner /at 2026-02-30 1800", "activity Dinner /at 2026-09-01 2460",
-        "view", "view 2026-02-30", "view 2026-09-01 1200 extra"})
+    @ValueSource(strings = {"activity Dinner /at 2026-02-30 1800", "activity Dinner /at 2026-9-1 1800",
+        "activity Dinner /at 2026-09-01 2460", "view", "view 2026-02-30", "view 2026-9-1",
+        "view 2026-09-01 1200 extra"})
     void parse_invalidDateCommands_throwsSpecificError(String input) {
         assertParseError(input, input.startsWith("view")
                 ? "Invalid view date. Use: view YYYY-MM-DD"
@@ -164,7 +161,8 @@ class ParserTest {
     @ValueSource(strings = {
         "stay Hotel /from 2026-02-30 /to 2026-03-01",
         "stay Hotel /from 2026-9-1 /to 2026-09-02",
-        "stay Hotel /from 2026-09-03 /to 2026-09-01"
+        "stay Hotel /from 2026-09-03 /to 2026-09-01",
+        "stay Hotel /from 2026-09-01 /to 2026-09-01"
     })
     void parse_stayWithInvalidDates_throwsStayDateError(String input) {
         assertParseError(input,

@@ -2,6 +2,7 @@ package meepmoop.command;
 
 import java.io.IOException;
 
+import meepmoop.exception.MeepException;
 import meepmoop.model.Itinerary;
 import meepmoop.model.Plan;
 import meepmoop.model.Transport;
@@ -23,8 +24,11 @@ public final class TransportCommand extends Command {
 
     /** Adds the transport plan, removing it again if saving fails. */
     @Override
-    public void execute(Itinerary itinerary, Ui ui, Storage storage) {
+    public void execute(Itinerary itinerary, Ui ui, Storage storage) throws MeepException {
         Plan plan = new Transport(description, fromLocation, toLocation);
+        if (itinerary.hasDuplicate(plan)) {
+            throw new MeepException("Duplicate item. An identical itinerary item already exists.");
+        }
         if (!itinerary.add(plan)) {
             ui.showItineraryFull();
             return;

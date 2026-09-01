@@ -52,7 +52,7 @@ public class Storage {
             }
             try {
                 Plan plan = parsePlan(line);
-                if (!itinerary.add(plan)) {
+                if (itinerary.hasDuplicate(plan) || !itinerary.add(plan)) {
                     hasCorruptedRecords = true;
                 }
             } catch (IllegalArgumentException exception) {
@@ -166,7 +166,7 @@ public class Storage {
         try {
             LocalDate from = LocalDate.parse(fromDate);
             LocalDate to = LocalDate.parse(toDate);
-            if (from.isAfter(to)) {
+            if (!from.isBefore(to)) {
                 throw new IllegalArgumentException("accommodation dates are reversed");
             }
         } catch (DateTimeParseException exception) {

@@ -76,8 +76,8 @@ paired with its exact expected output.
 
 ### 9. Invalid route markers and stay dates preserve state
 
-- Aim: Reject reversed or repeated route markers, impossible or reversed stay
-  dates, and verify that these errors do not add itinerary items.
+- Aim: Reject repeated or misplaced route markers, impossible, same-day, or
+  reversed stay dates, and verify that these errors do not add itinerary items.
 - Inputs: Add a baseline activity, enter malformed stay and transport commands,
   list the itinerary, then exit.
 - Expected output: Each command shows its specific format or date error and the
@@ -350,6 +350,7 @@ paired with its exact expected output.
       "stay Hotel /to 2026-09-03 /from 2026-09-01",
       "stay Hotel /from 2026-02-30 /to 2026-03-01",
       "stay Hotel /from 2026-09-03 /to 2026-09-01",
+      "stay Hotel /from 2026-09-01 /to 2026-09-01",
       "stay Hotel /from 2026-09-01 /to 2026-09-03 /to 2026-09-04",
       "transport Bus /from A /to B /to C",
       "list",
@@ -357,8 +358,8 @@ paired with its exact expected output.
     ],
     "commands": [
       {
-        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Baseline' 'stay Hotel /to 2026-09-03 /from 2026-09-01' 'stay Hotel /from 2026-02-30 /to 2026-03-01' 'stay Hotel /from 2026-09-03 /to 2026-09-01' 'stay Hotel /from 2026-09-01 /to 2026-09-03 /to 2026-09-04' 'transport Bus /from A /to B /to C' 'list' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
-        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Baseline\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid stay dates. Use valid dates in YYYY-MM-DD order\n____________________________________________________________\nInvalid stay dates. Use valid dates in YYYY-MM-DD order\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nList has been manually refreshed.\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Baseline' 'stay Hotel /to 2026-09-03 /from 2026-09-01' 'stay Hotel /from 2026-02-30 /to 2026-03-01' 'stay Hotel /from 2026-09-03 /to 2026-09-01' 'stay Hotel /from 2026-09-01 /to 2026-09-01' 'stay Hotel /from 2026-09-01 /to 2026-09-03 /to 2026-09-04' 'transport Bus /from A /to B /to C' 'list' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Baseline\nNow you have 1 items in your itinerary.\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid stay dates. Use valid dates in YYYY-MM-DD order\n____________________________________________________________\nInvalid stay dates. Use valid dates in YYYY-MM-DD order\n____________________________________________________________\nInvalid stay dates. Use valid dates in YYYY-MM-DD order\n____________________________________________________________\nInvalid stay format. Use: stay <name> /from <date> /to <date>\n____________________________________________________________\nInvalid transport format. Use: transport <name> /from <location> /to <location>\n____________________________________________________________\nList has been manually refreshed.\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   },
@@ -428,11 +429,22 @@ paired with its exact expected output.
   {
     "name": "Find items by description keywords",
     "aim": "Match all case-insensitive description keywords and preserve original item numbers.",
-    "inputs": ["activity Read Book", "activity Book Tokyo Flight", "activity Return book", "find BOOK flight", "find hotel", "find", "exit"],
+  "inputs": ["activity Read Book", "activity Book Tokyo Flight", "activity Return book", "find BOOK flight", "find hotel", "find", "exit"],
     "commands": [
       {
         "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Read Book' 'activity Book Tokyo Flight' 'activity Return book' 'find BOOK flight' 'find hotel' 'find' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
         "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Read Book\nNow you have 1 items in your itinerary.\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Book Tokyo Flight\nNow you have 2 items in your itinerary.\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Return book\nNow you have 3 items in your itinerary.\n____________________________________________________________\nHere are the matching items in your itinerary:\n2. [A] [ ] Book Tokyo Flight\n____________________________________________________________\nNo match found for keyword \"hotel\".\n____________________________________________________________\nInvalid find format. Use: find <keyword> [<keyword>...]\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
+      }
+    ]
+  },
+  {
+    "name": "Reject duplicate itinerary items without changing state",
+    "aim": "Reject an identical item while retaining the original item and allowing a distinct item.",
+    "inputs": ["activity Museum /at 2026-09-01 0900", "activity Museum /at 2026-09-01 0900", "activity Museum /at 2026-09-01 1000", "list", "exit"],
+    "commands": [
+      {
+        "command": "./gradlew --quiet classes && printf '%s\\n' 'activity Museum /at 2026-09-01 0900' 'activity Museum /at 2026-09-01 0900' 'activity Museum /at 2026-09-01 1000' 'list' 'exit' | java -cp build/classes/java/main meepmoop.MeepMoop",
+        "expected": "Hello! I'm MeepMoop. How can I assist you today?\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Museum (at: 1 Sep 2026 9am)\nNow you have 1 items in your itinerary.\n____________________________________________________________\nDuplicate item. An identical itinerary item already exists.\n____________________________________________________________\nGot it. I've added this activity:\n[A] [ ] Museum (at: 1 Sep 2026 10am)\nNow you have 2 items in your itinerary.\n____________________________________________________________\nList has been manually refreshed.\n____________________________________________________________\nGoodbye! Have a great day!\n____________________________________________________________"
       }
     ]
   }
