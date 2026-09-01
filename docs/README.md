@@ -102,7 +102,7 @@ transport Airport Shuttle /from Changi Airport /to City Hall
 
 ### Book or unbook an item
 
-Marks an itinerary item as booked or unbooked.
+Marks an itinerary item as booked or unbooked, to help you keep track of administrative details.
 
 ```text
 book ITEM_NUMBER
@@ -181,7 +181,6 @@ Select **Hide** or **Show** in the command panel. You can also enter:
 
 ```text
 help
-
 ```
 to collapse or reveal the command panel.
 
